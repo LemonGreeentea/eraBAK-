@@ -299,14 +299,14 @@ NEXT
 ;-------------------------------------------------
 @EQUIP_MESSAGE0(ARG:0)
 LOCAL:2 = 0
-RESULTS = %조사처리(EQUIP_PLAYER_ANAME(ARG:0),"가")% %EQUIP_TARGET_ANAME(ARG:0)%에 애무중
+RESULTS = %조사처리(EQUIP_PLAYER_ANAME(ARG:0),"가")% %EQUIP_TARGET_ANAME(ARG:0)%에게 애무중
 
 ;-------------------------------------------------
 ;계속중의 지문(전문)
 ;-------------------------------------------------
 @COM_TEXT_BEFORE_EQUIP0(ARG:0)
 
-PRINTFORML %조사처리(EQUIP_PLAYER_ANAME(ARG:0),"가")% %EQUIP_TARGET_ANAME(ARG:0)%의 신체를 만지작거리고 있다…
+PRINTFORML %조사처리(EQUIP_PLAYER_ANAME(ARG:0),"가")% %EQUIP_TARGET_ANAME(ARG:0)%의 신체를 애무하고 있다…
 
 ;-------------------------------------------------
 ;계속을 해제했을 때의 지문
@@ -385,14 +385,14 @@ ENDIF
 SELECTCASE GET_COM_INITIATIVE()
 	;플레이어에 주도권
 	CASE 0
-		PRINTFORMW %조사처리(LOCALS:2,"는")% %LOCALS:0% %LOCALS:1%의 피부에 상냥하게 손가락을 붙이고 쓰다듬%TARGET_STR("었다", "어 왔다")%…
+		PRINTFORMW %조사처리(LOCALS:2,"는")% %LOCALS:0% %LOCALS:1%의 피부에 상냥하게 손가락으로 쓰다듬%TARGET_STR("었다", "어 왔다")%…
 	;타겟으로 주도권
 	CASE 1
-		PRINTFORMW %조사처리(LOCALS:2,"는")% %LOCALS:1%에 듣는 대로, %LOCALS:0% %LOCALS:1%의 피부에 닿아 천천히 더듬었다…
+		PRINTFORMW %조사처리(LOCALS:2,"는")% %LOCALS:1%의 명령으로 %LOCALS:0% %LOCALS:1%의 몸을 천천히 더듬었다…
 	;제삼자에게 주도권
 	CASEELSE
-		PRINTFORML %조사처리(ANAME(TFLAG:45),"는")% %LOCALS:2%에 %LOCALS:1%의 몸을 애무하도록(듯이) 명령했다
-		PRINTFORMW %조사처리(LOCALS:2,"는")% %LOCALS:0% %LOCALS:1%의 피부에 상냥하게 손가락을 기게 한 더듬었다…
+		PRINTFORML %조사처리(ANAME(TFLAG:45),"는")% %LOCALS:2%에 %LOCALS:1%의 몸을 애무하도록 명령했다
+		PRINTFORMW %조사처리(LOCALS:2,"는")% %LOCALS:0% %LOCALS:1%의 피부를 손가락으로 상냥하게 더듬었다…
 ENDSELECT
 
 ;--------------------------------------------------------
@@ -410,20 +410,20 @@ FOR LOCAL:0, 0, MTAR_NUM
 			PRINTFORML %조사처리(ANAME(LOCAL:1),"는")% 의식을 잃은 채로 움찔움찔 몸을 진동시키고 있다
 		ELSEIF LOCAL:2 < 100
 			IF TALENT:(LOCAL:1):반항적 && !TALENT:(LOCAL:1):합의
-				PRINTFORML %조사처리(ANAME(LOCAL:1),"는")% 애무되면서도 반항적인 태도를 취하고 있다
+				PRINTFORML %조사처리(ANAME(LOCAL:1),"는")% 애무당하면서도 반항적인 태도를 보인다
 			ELSE
-				PRINTFORML %조사처리(ANAME(LOCAL:1),"는")% 근지러운 듯이 신체를 비틀지만 쾌락을 느끼기까지는 도달하지 않는 것 같다
+				PRINTFORML %조사처리(ANAME(LOCAL:1),"는")% 간지러운 듯이 신체를 비틀지만 쾌락에는 도달하지 않는 것 같다
 			ENDIF
 		ELSEIF LOCAL:2 < 300
-			PRINTFORML %조사처리(ANAME(LOCAL:1),"는")% 이쪽의 애무에 반응해 신체를 진동시키고 있다
+			PRINTFORML %조사처리(ANAME(LOCAL:1),"는")% 이쪽의 애무에 몸을 떨고 있다
 		ELSEIF LOCAL:2 < 1000
-			PRINTFORML %조사처리(ANAME(LOCAL:1),"는")% 가벼운 전격에서도 신체에 달렸는지같이 작게 떨렸다
+			PRINTFORML %조사처리(ANAME(LOCAL:1),"는")% 가벼운 전격이라도 느꼈는지 몸을 작게 떨었다
 		ELSEIF LOCAL:2 < 3000
-			PRINTFORML %조사처리(ANAME(LOCAL:1),"는")% 분명하게 쾌락을 느끼고 있는 모습으로 요염한 신음소리를 주고 있다
+			PRINTFORML %조사처리(ANAME(LOCAL:1),"는")% 분명하게 쾌락을 느끼고 있고 요염한 신음소리를 내고 있다
 		ELSEIF LOCAL:2 < 6000
-			PRINTFORML %조사처리(ANAME(LOCAL:1),"는")% 애무에 격렬하게 쾌락을 느껴 스스로 조르도록(듯이) 손을 목에 돌렸다
+			PRINTFORML %조사처리(ANAME(LOCAL:1),"는")% 애무에 격렬하게 쾌락을 느끼면서 스스로 조르듯 손을 밀착한다
 		ELSE
-			PRINTFORML %조사처리(ANAME(LOCAL:1),"는")% 이쪽의 애무만으로 마구 격렬하게 느끼고 있어 새로운 자극을 요구해 기대고 걸려 왔다
+			PRINTFORML %조사처리(ANAME(LOCAL:1),"는")% 이쪽의 애무만으로 마구 격렬하게 느끼고 있으며 새로운 자극을 기대하고 있다
 		ENDIF
 	ENDIF
 NEXT

@@ -1042,69 +1042,36 @@ ENDIF
 ;-------------------------------------------------
 IF SELECTCOM == 4
 	;이 캐릭터가 주도권을 가지고 있다
-	IF IS_INITIATIVE(TARGET)
-		;처음
-		IF IS_COM_FIRST()
-			;연모 or 복종
-			IF TALENT:연모 || TALENT:복종
-				;PRINTFORMW 
-			;그 이외
-			ELSE
-				;PRINTFORMW 
-			ENDIF
-		;2회째 이후
+	;처음
+	IF IS_COM_FIRST()
+		;연모 or 복종
+		IF TALENT:연모
+			;PRINTFORMW 
+		ELSEIF TALENT:복종
+			;PRINTFORMW 
+		;그 이외
 		ELSE
-			;연모 or 복종
-			IF TALENT:연모 || TALENT:복종
-				;Ａ감 Lv3 이상
-				IF ABL:Ａ감 >= 3
-					;PRINTFORMW 
-				;Ａ감 Lv3 미만
-				ELSE
-					;PRINTFORMW 
-				ENDIF
-			;그 이외
-			ELSE
-				;Ａ감 Lv3 이상
-				IF ABL:Ａ감 >= 3
-					;PRINTFORMW 
-				;Ａ감 Lv3 미만
-				ELSE
-					;PRINTFORMW 
-				ENDIF
-			ENDIF
+			;PRINTFORMW 
 		ENDIF
-	;이 캐릭터가 주도권을 가지고 있지 않다
+	;2회째 이후
 	ELSE
-		;처음
-		IF IS_COM_FIRST()
-			;연모 or 복종
-			IF TALENT:연모 || TALENT:복종
+		;연모 or 복종
+		IF TALENT:연모 || TALENT:복종
+			;Ａ감 Lv3 이상
+			IF ABL:Ａ감 >= 3
 				;PRINTFORMW 
-			;그 이외
+			;Ａ감 Lv3 미만
 			ELSE
 				;PRINTFORMW 
 			ENDIF
-		;2회째 이후
+		;그 이외
 		ELSE
-			;연모 or 복종
-			IF TALENT:연모 || TALENT:복종
-				;Ａ감 Lv3 이상
-				IF ABL:Ａ감 >= 3
-					;PRINTFORMW 
-				;Ａ감 Lv3 미만
-				ELSE
-					;PRINTFORMW 
-				ENDIF
-			;그 이외
+			;Ａ감 Lv3 이상
+			IF ABL:Ａ감 >= 3
+				;PRINTFORMW 
+			;Ａ감 Lv3 미만
 			ELSE
-				;Ａ감 Lv3 이상
-				IF ABL:Ａ감 >= 3
-					;PRINTFORMW 
-				;Ａ감 Lv3 미만
-				ELSE
-					;PRINTFORMW 
-				ENDIF
+				;PRINTFORMW 
 			ENDIF
 		ENDIF
 	ENDIF
@@ -1115,47 +1082,27 @@ ENDIF
 ;로션(타겟)
 ;-------------------------------------------------
 IF SELECTCOM == 5
-	;이 캐릭터가 주도권을 가지고 있다
-	IF IS_INITIATIVE(TARGET)
-		;처음
-		IF IS_COM_FIRST()
-			;연모 or 복종
-			IF TALENT:연모 || TALENT:복종
-				;PRINTFORMW 
-			;그 이외
-			ELSE
-				;PRINTFORMW 
-			ENDIF
-		;2회째 이후
+	;처음
+	IF IS_COM_FIRST()
+		;연모 or 복종
+		IF TALENT:연모
+			;PRINTFORMW
+		ELSEIF TALENT:복종
+			;PRINTFORMW 
+		;그 이외
 		ELSE
-			;연모 or 복종
-			IF TALENT:연모 || TALENT:복종
-				;PRINTFORMW 
-			;그 이외
-			ELSE
-				;PRINTFORMW 
-			ENDIF
+			;PRINTFORMW 
 		ENDIF
-	;이 캐릭터가 주도권을 가지고 있지 않다
+	;2회째 이후
 	ELSE
-		;처음
-		IF IS_COM_FIRST()
-			;연모 or 복종
-			IF TALENT:연모 || TALENT:복종
-				;PRINTFORMW 
-			;그 이외
-			ELSE
-				;PRINTFORMW 
-			ENDIF
-		;2회째 이후
+		;연모 or 복종
+		IF TALENT:연모
+			;PRINTFORMW
+		ELSEIF TALENT:복종
+			;PRINTFORMW 
+		;그 이외
 		ELSE
-			;연모 or 복종
-			IF TALENT:연모 || TALENT:복종
-				;PRINTFORMW 
-			;그 이외
-			ELSE
-				;PRINTFORMW 
-			ENDIF
+			;PRINTFORMW 
 		ENDIF
 	ENDIF
 	RETURN 0
