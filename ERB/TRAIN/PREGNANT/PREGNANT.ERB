@@ -246,7 +246,6 @@ IF IS_FEMALE(ARG:0) && GET_BUSTSIZE(ARG:0) != 2 && CFLAG:(ARG:0):임신시가슴
 		CALL SET_BUSTSIZE(ARG:0, BUSTSIZE + 1)
 ENDIF
 
-
 IF IS_PREGNANT_MSG(ARG:0)
 	CALL KOJO_EVENT(ARG:0, 40)
 	;육아중에 임신하면 아이가 거기에 리액션을 하는 이벤트를 꽂아넣는다
