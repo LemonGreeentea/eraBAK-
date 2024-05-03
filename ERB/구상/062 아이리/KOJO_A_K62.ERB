@@ -337,10 +337,10 @@ IF TALENT:공허
 ENDIF
 
 ;연인이면서 섹스(합의)한 상태
-IF TALENT:연인 && TALENT:합의
+IF TALENT:연인 && TALENT:합의 && TALENT:연모
 	;PRINTFORMW 
 ;연인이면서 섹스(합의) 안 한 사이
-ELSEIF TALENT:연인
+ELSEIF TALENT:연인 && TALENT:연모
 	;PRINTFORMW
 ;복종이면서 섹스(합의)한 사이
 ELSEIF TALENT:복종 && TALENT:합의
@@ -385,16 +385,36 @@ ELSEIF BASE:기력 <= 300 || BASE:체력 <= 300
 	PRINTFORMW 아이리는 꾸벅꾸벅 졸더니 그대로 잠들어버렸다.
 ;연인
 ELSEIF TALENT:연인 && TALENT:연모
-	PRINTFORMW 
+	PRINTFORMW 「우으... %LOCALS:0%, 좀 더 엣치 해요오...」
+	PRINTFORMW 아이리가 %조사처리(ANAME(MASTER),"을")% 껴안고 졸라대지만 어쩔 수 없다.
+	;비처녀, V감 2이상, 욕망 3 이상
+	IF TALENT:처녀 == 0 && ABL:욕망 >= 3 && ABL:Ｖ감 >= 2
+		SELECTCASE RAND:3
+			CASE 0
+				PRINTFORMW 「다음에도 제 안쪽 푹푹 해주셔야 해요?」
+			CASE 1
+				PRINTFORMW 「우으... 또 안아주셔야 해요?」
+			CASE 2
+				PRINTFORMW 「또 제 보지에 자지 푹푹 해주세요!」
+		ENDSELECT
+	;그 외
+	ELSE
+		PRINTFORMW 「다음에도 저랑 엣치해주세요!」
+	ENDIF 
 ;복종
 ELSEIF TALENT:복종
-	;PRINTFORMW 
+	PRINTFORMW 「%LOCALS:0%, 오늘 기분 좋으셨나요?」
+	PRINTFORMW 「우읏, 다, 다행이에요...」
+	PRINTFORMW 「다음에도 야한거 하고 싶으시면 불러주세요」
 ;연모
 ELSEIF TALENT:연모
-	;PRINTFORMW
-;일반 만남
+	PRINTFORMW 「으읏, 벌써 시간이...」
+	PRINTFORML 「좀 더 같이 있고 싶은데... 안되나요?」
+	PRINTFORMW 「또 불러주세요? 헤헤」
+;일반
 ELSE
-	;PRINTFORMW 
+	PRINTFORMW 「흐읏, 끄,끝인가요?」
+	PRINTFORMW 「조심히 가세요. %LOCALS:0%」
 
 ENDIF
 RESETCOLOR
