@@ -2,8 +2,8 @@
 ; EraBlueArchiveK 요시미 구상 공통 구상
 ; 제작자 : 레몬녹차
 ; 최초 작성일 : 2024. 4. 22.
-; 최종 수정일 : 2024. 4. 22.
-; 
+; 최종 수정일 : 2024. 5. 5.
+;  
 ; 리액션 혜자 츤데레 요시미의 구상입니다. >>>\(>ㅁ<)/<<<
 ; 
 ;-------------------------------------------------
@@ -95,7 +95,7 @@ ELSE
 ENDIF
 
 ;-------------------------------------------------
-;첫절정은 재사용할 수 있을 것 같은 것으로 여기에 작성
+;절정 구상
 ;-------------------------------------------------
 ;-------------------------------------------------
 ;Ｃ절정 구상
@@ -104,15 +104,19 @@ IF NOWEX:Ｃ절정 > 0
 	;첫 C절정
 	IF CFLAG:220 == 0
 		CFLAG:220 = 1
-		PRINTFORML 「하읏... 흐.. 이거 이상해요....」
-		PRINTFORMW 아이리는 녹아버릴 것 같은 얼굴로 엄청난 쾌감을 견디고 있다.
-		PRINTFORML 「으읏... 햐아.. 뭔가 와요.. 흐읏... 햐아앗!」
-		PRINTFORMW %ANAME(MASTER)%의 손이 살짝 닿자 아이리는 몸을 떨면서 절정에 달했다.
-		PRINTFORMW 「햐으... 흐에... 이런거... 머리가 이상해져요」
+		PRINTFORML 「읏, 뭐야... 이거어...」
+		PRINTFORMW 요시미는 처음 느껴보는 절정에 몸부림치고 있다.
+		PRINTFORML 「그마안, 제발... 멈춰줘...!」
+		PRINTFORMW 「크으읏... 햐아앙... 시러어...」
 	;그 이후 절정
 	ELSE
-		PRINTFORML 아이리는 달콤한 신음을 내며 절정에 달했다.
-		PRINTFORMW 「흐읏.. 햐앗... 기분 죠아...」
+		SELECTCASE RAND:2
+			CASE 0
+				PRINTFORMW 「힛, 시러엇... 가버려엇...」
+			CASE 1
+				PRINTFORMW 「햐아앙... 안대에, 간다앗...」
+		ENDSELECT
+
 	ENDIF
 ENDIF
 
@@ -123,31 +127,19 @@ IF NOWEX:Ｖ절정 > 0
 	;첫 V절정
 	IF CFLAG:221 == 0
 		CFLAG:221 = 1
-		PRINTFORMW 「아앗.. 와요... 이상한게 와요...」
-		PRINTFORML 「안쪽이 이상해.... 간닷....」
-		PRINTFORMW 아이리는 고개를 젖히고 질로 절정에 달했다.
+		PRINTFORMW 「뭐야... 안쪽이 이상해...!」
+		PRINTFORML 「그만, 멈춰줘 더 이상 하면.... 힛」
+		PRINTFORMW 요시미는 몸을 떨면서 절정에 달했다.
+		PRINTFORMW 「크응읏...! 흐읏... 아냐, 안갔거든?!」
 	;그 이후 V절정
 	ELSE
-		SELECTCASE RAND:3
+		SELECTCASE RAND:2
 			CASE 0
-				PRINTFORML 아이리는 몸을 떨며 절정했다
-				PRINTFORML 「햐읏.... 후읏...」
-				PRINTFORMW 안쪽이 꾸욱 조이면서 질로 절정했다.
+				PRINTFORML 요시미는 몸을 떨며 절정했다
+				PRINTFORML 「으읏.... 시럿, 히잇...!」
 			CASE 1
-				PRINTFORML 「햐앗.. 가요... 가버려요...」
-				PRINTFORMW 아이리의 질내가 확 조이면서 절정에 달했다.
-			CASE 2
-				IF TALENT:연모
-					PRINTFORML 「하아 하앗... %LOCALS:0%의 자지로 가버려요...♡」
-					PRINTFORMW 아이리는 %ANAME(MASTER)%의 자지를 조이면서 가버렸다
-				ELSEIF TALENT:복종
-					PRINTFORML 「우읏... %LOCALS:0%의 자지로 가버려요..」
-					PRINTFORMW 아이리는 %ANAME(MASTER)%의 피스톤질에 가버렸다
-				ELSE
-					PRINTFORML 「햐앗... 뭔가 와요...」
-					PRINTFORML 아이리는 %ANAME(MASTER)%의 자지로 가버렸다
-					PRINTFORML 「크으읏... 하아... 하아...」
-				ENDIF
+				PRINTFORML 「안댓... 또 간다...♡」
+				PRINTFORMW 요시미의 질이 꾹 조이면서 절정에 달했다.
 		ENDSELECT
 	ENDIF
 ENDIF
@@ -159,13 +151,13 @@ IF NOWEX:Ａ절정 > 0
 	;처음 A절정
 	IF CFLAG:222 == 0
 		CFLAG:222 = 1
-		PRINTFORMW 「아앗... 엉덩이 이상해요오... 흐읏...」
-		PRINTFORML 아이리의 장내가 꾸욱 조이면서 생전 처음 느껴보는 절정에 달하였다.
-		PRINTFORMW 「흐으... 흐읏... 저 변태가 되어버린거 같아요...」
+		PRINTFORMW 「흣, 흐으... 힛, 안돼, 엉덩이인데 가앗...♡」
+		PRINTFORML 요시미의 장내가 꾸욱 조이면서 생전 처음 느껴보는 절정에 달하였다.
+		PRINTFORMW 「흐... 후... 말도 안돼... 」
 	;그 이후 A절정
 	ELSE
-		PRINTFORML 아이리는 고개를 젖히고 엉덩이로 절정에 달하였다.
-		PRINTFORMW 「아앗... 엉덩이로 가욧...♡」
+		PRINTFORML 요시미는 고개를 젖히고 엉덩이로 절정에 달하였다.
+		PRINTFORMW 「읏... 엉덩이로 가앗...♡」
 	ENDIF
 
 ENDIF
@@ -177,11 +169,12 @@ IF NOWEX:Ｂ절정 > 0
 	;처음Ｂ절정
 	IF CFLAG:223 == 0
 		CFLAG:223 = 1
-		PRINTFORMW 「크읏... 가슴이 이상해요옷.. 히야앗」
+		PRINTFORMW 「뭐야... 가슴이... 힛! 히야앗」
+		PRINTFORMW 요시미는 처음 느껴보는 절정에 눈물을 흘리며 몸을 떨고 있다.
 	;그 이후Ｂ절정
 	ELSE
-		PRINTFORML 「햐앗... 가슴으로 가버려요...」
-		PRINTFORMW 「크으읏....♡」
+		PRINTFORML 「햐앗... 가슴 기분죠앗...」
+		PRINTFORMW 「햐읏....♡」
 	ENDIF
 ENDIF
 

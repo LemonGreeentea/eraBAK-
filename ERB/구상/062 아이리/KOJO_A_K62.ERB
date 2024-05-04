@@ -1,7 +1,7 @@
 ﻿;===============================================
 ; EraBlueArchiveK 아이리 구상 A세트(만나러간다, 침실호출)
 ; 제작자 : 레몬녹차
-; 구상 최종 수정 : 2024-04-14
+; 구상 최종 수정 : 2024-05-04
 ; 
 ; 자칭 '평범'호소인이 아닌 진짜 '평범'한 학생 아이리 구상
 ; 아이리 귀여워 (★≧▽^))★☆
@@ -337,26 +337,21 @@ IF TALENT:공허
 ENDIF
 
 ;연인이면서 섹스(합의)한 상태
-IF TALENT:연인 && TALENT:합의 && TALENT:연모
-	;PRINTFORMW 
-;연인이면서 섹스(합의) 안 한 사이
-ELSEIF TALENT:연인 && TALENT:연모
-	;PRINTFORMW
+IF TALENT:연인 && TALENT:연모
+	PRINTFORMW 「후후, 오늘도 엣치 하는건가요?」
+	PRINTFORMW 「같이 기분 좋아져요?」
 ;복종이면서 섹스(합의)한 사이
-ELSEIF TALENT:복종 && TALENT:합의
-	;PRINTFORMW 
-;복종이면서 섹스(합의) 안 한 사이
 ELSEIF TALENT:복종
-	;PRINTFORMW 
+	PRINTFORMW 「읏, 오늘도 하는건가요...?」
+	PRINTFORMW 「네에... %LOCALS:0% 마음대로 해주세요」
 ;연모면서 섹스(합의)한 사이
-ELSEIF TALENT:합의 && TALENT:연모
-	;PRINTFORMW
-;연모 (섹스안함)
 ELSEIF TALENT:연모
-	;PRINTFORMW
+	PRINTFORMW 「사, 사귀는 사이도 아닌데 엣치라니...」
+	PRINTFORMW 「싫지는 않지만요...」
 ;일반 만남
 ELSE
-	;PRINTFORMW 
+	PRINTFORMW 「엣치 하는건가요?」
+	PRINTFORMW 「읏, 알겠습니다아...」
 
 ENDIF
 RESETCOLOR
@@ -791,7 +786,7 @@ IF SELECTCOM == 1
 			;Ｂ감 Lv3 미만
 			ELSE
 				PRINTFORMW 「!!!!」
-				PRINTFORML %조사처리(ANAME(MASTER),"가")% 가슴에 손을 대자 놀란 듯 쳐다본다.
+				PRINTFORML %조사처리(ANAME(MASTER),"가")% 아이리의 가슴을 만지자 놀란 듯 쳐다본다.
 				PRINTFORMW 「우... 만지고 싶으신가요...? 가슴은 자신 없는데요..」
 				PRINTFORML 만지고 싶다고 말하자 %ANAME(MASTER)% 앞에 다가와 작은 가슴을 내민다.
 				PRINTFORMW 「대신 안 아프게 만져주세요...?」
@@ -920,10 +915,13 @@ IF SELECTCOM == 3
 		IF TALENT:처녀
 			;연모
 			IF TALENT:연모
-				;PRINTFORMW 
+				PRINTFORML 「%LOCALS:0%의 손가락이 제 안에...」
+				PRINTFORML 「으읏, 안 쪽 닿아서 이상해요...」
+				PRINTFORMW 「그, 그래도 좋아요...♡」
 			;복종
 			ELSEIF TALENT:복종
-				;PRINTFORMW 
+				PRINTFORML 「%LOCALS:0%의 손가락이 제 안에...」
+				PRINTFORML 「으읏, 안 쪽 닿아서 이상해요...」
 			;그 이외
 			ELSE
 				;PRINTFORMW 
@@ -947,28 +945,31 @@ IF SELECTCOM == 3
 		IF TALENT:연모
 			;Ｖ감 Lv3 이상
 			IF ABL:Ｖ감 >= 3
-				;PRINTFORMW 
+				PRINTFORMW 「%LOCALS:0%의 손가락, 기분좋은 곳에 닿아서... 힉!」
+				PRINTFORMW 「좋아요....♡」
 			;Ｖ감 Lv3 미만
 			ELSE
-				;PRINTFORMW 
+				PRINTFORMW 「우읏, 손가락이 안쪽에... 읏..」
 			ENDIF
 		;복종
 		ELSEIF TALENT:복종
 			;Ｖ감 Lv3 이상
 			IF ABL:Ｖ감 >= 3
-				;PRINTFORMW 
+				PRINTFORMW 「손가락, 기분좋은 곳에 닿아서... 힉!」
+				PRINTFORMW 「좋아요....♡」
 			;Ｖ감 Lv3 미만
 			ELSE
-				;PRINTFORMW 
+				PRINTFORMW 「우읏, 손가락이 안쪽에... 읏..」
 			ENDIF
 		;그 이외
 		ELSE
 			;Ｖ감 Lv3 이상
 			IF ABL:Ｖ감 >= 3
-				;PRINTFORMW 
+				PRINTFORMW 「손가락, 기분좋은 곳에 닿아서... 힉!」
+				PRINTFORMW 「좋아요....♡」
 			;Ｖ감 Lv3 미만
 			ELSE
-				;PRINTFORMW 
+				PRINTFORMW 「우읏, 손가락이 안쪽에... 읏..」
 			ENDIF
 		ENDIF
 	ENDIF
@@ -1680,7 +1681,16 @@ IF SELECTCOM == 30
 		ELSEIF TALENT:복종
 			;V감도 3 이상
 			IF ABL:Ｖ감 >= 3
-			
+				SELECTCASE RAND:4
+					CASE 0
+					
+					CASE 1
+					
+					CASE 2
+					
+					CASE 3
+
+				ENDSELECT
 			;V감도 2 이하
 			ELSE
 				SELECTCASE RAND:4
@@ -1701,22 +1711,25 @@ IF SELECTCOM == 30
 			ENDIF
 		;(선택)호감도가 -500에서 첫 섹스
 		ELSEIF CFLAG:호감도 <= -500
-
+			;V감도 3 이상
+			IF ABL:Ｖ감 >= 3
+				PRINTFORMW 「힛, 흐잇... 싫어...」
+				PRINTFORMW 「싫지마안... 기분 좋아...♡ 힛!」
+			;V감도 2 이하
+			ELSE
+				PRINTFORMW 「으읏, 싫어, 기분나빠...」
+			ENDIF
 		;그 외
 		ELSE
 			;V감도 3 이상
 			IF ABL:Ｖ감 >= 3
-				SELECTCASE RAND:5
+				SELECTCASE RAND:3
 					CASE 0
-						PRINTFORMW 
+						PRINTFORMW 「힛, 좋아아... ♡ 안쪽 더 박아줘요」
 					CASE 1
-
+						PRINTFORMW 「흣 흐읏...! 약한 곳 찌르며언...♡」
 					CASE 2
-
-					CASE 3
-
-					CASE 4
-
+						PRINTFORMW 「하앗! %LOCALS:0%의 자지 기분 좋아요!」
 				ENDSELECT
 			;V감도 2 이하
 			ELSE
