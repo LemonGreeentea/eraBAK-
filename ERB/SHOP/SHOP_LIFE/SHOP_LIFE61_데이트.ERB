@@ -1,4 +1,20 @@
 ﻿;-------------------------------------------------
+; 블루아카 K 데이트 시스템
+; 개조자 : 레몬녹차
+; 개조시작 : 2024. 5. 4. / 최종수정 : 2024. 5. 5.
+; 시스템 설명 : 기존 밋밋했던 데이트 시스템을 개편하여 장소에 따른 보상을 변경하고
+;              캐릭터별 구상 출력 시스템 추가.
+;
+; 주요 기능
+;   1. 데이트 장소 변경(블루아카에 맞는 장소)
+;   2. 크레딧 소모량 변경(장소별 차등)
+;   3. 장소 이미지 추가
+;   4. 캐릭터 데이트구상 출력 시스템 추가(템플릿 파일도 추가)
+;
+; 추가 예정 기능
+;   1. 특정 지역을 점령하거나 점령한 세력과 동맹일 시 갈 수 있는 데이트 장소 추가(ex. 크루즈선 등)
+;
+;-------------------------------------------------
 ;「데이트」의 명칭
 ;-------------------------------------------------
 @SHOP_LIFE_NAME61
@@ -9,8 +25,8 @@ RESULTS:0 '= "데이트"
 ;-------------------------------------------------
 @SHOP_LIFE_CHECK61
 ;데이트대 부족
-SIF MONEY < 3000
-	RETURN 0
+;SIF MONEY < 3000
+;	RETURN 0
 SIF CFLAG:MASTER:포로처
 	RETURN 0
 SIF !CFLAG:MASTER:소속
@@ -37,7 +53,7 @@ RETURN 0
 ;-------------------------------------------------
 @SHOP_LIFE_EVENTBUY_SHOW61
 ;타이틀
-CALL COLUMN_RIGHT_TITLE("대상자 선택", "0", "1", "1～전", "3, 000～", "자세력만 가능")
+CALL COLUMN_RIGHT_TITLE("대상자 선택", "0", "1", "1～모두", "3, 000～", "자기세력만 가능")
 CALL COLUMN_RIGHT_PRINTL
 CALL COLUMN_RIGHT_LINE
 CALL COLUMN_RIGHT_PRINTL
@@ -46,64 +62,249 @@ CALL COLUMN_RIGHT_CHARALIST
 RETURN
 
 ;-------------------------------------------------
+;「데이트」의 이미지 표시
+;-------------------------------------------------
+@SHOP_LIFE_Illust61(String,SIZE)
+#DIM iSize
+#DIMS sHtml
+#DIM iFont_Hei_mag
+#DIM iEnter_Con
+#DIM iSpace
+#DIMS String
+#DIM SIZE
+#DIM SPACE_LIST
+#DIM Integer
+#DIM iID
+
+SIF SIZE == 0
+    SIZE = 700
+iEnter_Con = 0
+sHtml =  <p align='left'><nobr>
+sHtml += @"<shape type='space' param='{iSpace}'><img src='%String%' height='{SIZE}' ypos='100'>"
+HTML_PRINT sHtml
+
+RETURN 0
+
+;-------------------------------------------------
+;「데이트」의 수락 확률 계산
+;-------------------------------------------------
+@SHOP_LIFE_Chance61(난이도,대상,출력여부)
+#DIM 난이도
+#DIM 대상
+#DIM 출력여부
+
+;난이도 계산
+
+
+
+;글자출력
+;불가능, 낮음, 보통, 높음, 확실
+SETCOLOR 0x0099FF
+PRINT 확실
+RESETCOLOR
+RETURN 0
+
+;-------------------------------------------------
 ;「데이트」의 리스트 1 입력 처리
 ;-------------------------------------------------
 @SHOP_LIFE_USERSHOP61(대상)
+#DIM FIRST_LINE
 #DIM 대상, 1
 #DIM 결과, 1
 #DIM 전소비, 1
 #DIM 내용, 1
 #DIM 능력, 1
 #DIM 이벤트발생, 1
-;대상자와 데이트 한다
-;돈소비, 1회 10000
-;호감도+ 200+RAND:100
-;행선지는 호, 숲, 마을 etc
 
 FLAG:능력표시모드 = 0
 
 이벤트발생 = 0
 LOCAL:5 = 0
 CALL SINGLE_DRAWLINE
-PRINTFORML 행동횟수와 돈을 소비해, %조사처리(ANAME(대상),"와")% 데이트 합니다.
-PRINTFORML 1회 데이트 할 때마다 금 3, 000을 소비합니다.
-PRINTFORML 어디로 이끕니까?
+PRINTFORML 행동력과 크레딧을 사용하여 %조사처리(ANAME(대상),"와")% 데이트 합니다.
+PRINTFORML 어디로 갈까요?(거절 시 돈, 아이템, 행동 소모 없음)
 PRINTFORML 
-PRINTFORML 잔행동:{CALC_SHOP_TIME() - SHOP_TIME}
-PRINTFORML 소지금:%NUM_FORMAT(MONEY)%
+PRINTFORML ※ 현재 개발중이라 무조건 수락
+PRINTFORML 남은행동:{CALC_SHOP_TIME() - SHOP_TIME}
+PRINTFORML 크레딧:%NUM_FORMAT(MONEY)%
 CALL SINGLE_DRAWLINE
-PRINTBUTTON @"%"[호수]", 12, LEFT%", 1
-PRINTBUTTON "[행동전소비]", 11
-PRINTL   호수로 이끕니다. 무투치가 높을 정도 상대에게 좋은 인상이 주어집니다.
-PRINTBUTTON @"%"[산]", 12, LEFT%", 2
-PRINTBUTTON "[행동전소비]", 12
-PRINTL   산으로 이끕니다. 방위치가 높을 정도 상대에게 좋은 인상이 주어집니다.
-PRINTBUTTON @"%"[숲]", 12, LEFT%", 3
-PRINTBUTTON "[행동전소비]", 13
-PRINTL   숲으로 이끕니다. 지략치가 높을 정도 상대에게 좋은 인상이 주어집니다.
-PRINTBUTTON @"%"[마을]", 12, LEFT%", 4
-PRINTBUTTON "[행동전소비]", 14
-PRINTL   마을로 이끕니다. 정치치가 높을 정도 상대에게 좋은 인상이 주어집니다.
-PRINTBUTTON @"%"[꽃밭]", 12, LEFT%", 5
-PRINTBUTTON "[행동전소비]", 15
-PRINTL   꽃밭으로 이끕니다. 가창치가 높을 정도 상대에게 좋은 인상이 주어집니다.
-PRINTBUTTON @"%"[자택]", 12, LEFT%", 6
-PRINTBUTTON "[행동전소비]", 16
-PRINTL   자택으로 이끕니다. 요리치가 높을 정도 상대에게 좋은 인상이 주어집니다.
+;--------------------------------------------------
+; 공원 - 크레딧이 들지 않고, 가장 수락확률이 높다.
+; 음란도가 높으면 야외엣치 등을 할 수 있으면 좋을듯?
+;--------------------------------------------------
+CALL SHOP_LIFE_Illust61("DatePlace01")
+PRINT                              
+PRINTBUTTON @"%"[공원]", 20, LEFT%", 1
+PRINTL
+PRINT                               
+PRINTFORM <소모 크레딧 : 0>  <수락확률 : 
+CALL SHOP_LIFE_Chance61(1,대상,1)
+PRINTL >
+PRINT                               
+PRINTFORML 공원에서 데이트합니다. 
+PRINT                               
+PRINTFORML 
+PRINT                               
+PRINTFORML
+PRINT                               
+PRINTFORML
+PRINT                               
+PRINTFORML
+
+;--------------------------------------------------
+; 시내 - 선물을 주거나 같이 음식을 먹을 수 있음.(크레딧 소비)
+;--------------------------------------------------
+CALL SHOP_LIFE_Illust61("DatePlace02")
+PRINT                              
+PRINTBUTTON @"%"[시내]", 20, LEFT%", 2
+PRINTL
+PRINT                               
+PRINTFORM <소모 크레딧 : 0>  <수락확률 : 
+CALL SHOP_LIFE_Chance61(1,대상,1)
+PRINTL >
+PRINT                               
+PRINTFORML 시내를 돌아다니면서 데이트합니다.
+PRINT                               
+PRINTFORML 선물을 사주거나 맛있는 음식을 먹습니다.
+PRINT                               
+PRINTFORML
+PRINT                               
+PRINTFORML
+PRINT                               
+PRINTFORML
+
+;--------------------------------------------------
+; 게임센터 - 
+;--------------------------------------------------
+CALL SHOP_LIFE_Illust61("DatePlace03")
+PRINT                              
+PRINTBUTTON @"%"[게임센터]", 20, LEFT%", 3
+PRINTL
+PRINT                               
+PRINTFORM <소모 크레딧 : 3,000>  <수락확률 : 
+CALL SHOP_LIFE_Chance61(1,대상,1)
+PRINTL >
+PRINT                               
+PRINTFORML 게임센터에서 데이트합니다. 
+PRINT                               
+PRINTFORML 
+PRINT                               
+PRINTFORML
+PRINT                               
+PRINTFORML
+PRINT                               
+PRINTFORML
+
+CALL SHOP_LIFE_Illust61("DatePlace04")
+PRINT                              
+PRINTBUTTON @"%"[놀이공원]", 20, LEFT%", 4
+PRINTL
+PRINT                               
+PRINTFORM <소모 크레딧 : 7,000>  <수락확률 : 
+CALL SHOP_LIFE_Chance61(1,대상,1)
+PRINTL >
+PRINT                               
+PRINTFORML 종일권을 끊고 놀이공원에서 놉니다.
+PRINT                               
+PRINTFORML 
+PRINT                               
+PRINTFORML
+PRINT                               
+PRINTFORML
+PRINT                               
+PRINTFORML
+
+CALL SHOP_LIFE_Illust61("DatePlace05")
+PRINT                              
+PRINTBUTTON @"%"[혼욕온천]", 20, LEFT%", 5
+PRINTL
+PRINT                               
+PRINTFORM <소모 크레딧 : 10,000>  <수락확률 : 
+CALL SHOP_LIFE_Chance61(1,대상,1)
+PRINTL >
+PRINT                               
+PRINTFORML 온천 티켓을 사용하여 혼욕 온천에 갑니다.
+PRINT                               
+PRINTFORML 
+PRINT                               
+PRINTFORML
+PRINT                               
+PRINTFORML
+PRINT                               
+PRINTFORML
+
 CALL SINGLE_DRAWLINE
 PRINTBUTTON "[0] - 돌아온다", 0
+PRINTFORML
+FIRST_LINE = LINECOUNT
 $INPUT_LOOP
 INPUT 0
 
 내용 = RESULT
-;0라면 되돌린다
+;0라면 되돌아간다.
 IF 내용 == 0
 	RETURN 0
 ENDIF
 
+
+;공원, 소모 크레딧 0
+IF 내용 == 1
+	PRINTFORMW %ANAME(대상)%에게 공원 데이트를 신청하시겠습니까?
+	CALL ASK_YN
+	IF RESULT == 1
+		CLEARLINE LINECOUNT - FIRST_LINE
+		GOTO INPUT_LOOP
+	ENDIF
+	CALL SHOP_LIFE61_DATE_PLACE1(대상)
+	RETURN 1
+;시내, 소모 크레딧 0
+ELSEIF 내용 == 2
+
+;게임센터, 소모 크레딧 3,000
+ELSEIF 내용 == 3
+	IF MONEY < 3000
+		CLEARLINE LINECOUNT - FIRST_LINE
+		GOTO INPUT_LOOP
+	ELSE
+
+	ENDIF
+;놀이공원, 소모크레딧 7,000
+ELSEIF 내용 == 4
+	IF MONEY < 7000
+		CLEARLINE LINECOUNT - FIRST_LINE
+		GOTO INPUT_LOOP
+	ELSE
+
+	ENDIF
+;혼욕온천, (임시)소모크레딧 10,000
+ELSEIF 내용 == 5
+	IF MONEY < 10000
+		CLEARLINE LINECOUNT - FIRST_LINE
+		GOTO INPUT_LOOP
+	ELSE
+
+	ENDIF
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 IF GROUPMATCH(내용, 11, 12, 13, 14, 15, 16)
 	IF MONEY < 3000 * (CALC_SHOP_TIME() - SHOP_TIME)
 		PRINTFORMW 돈이 충분하지 않습니다.
+		CLEARLINE LINECOUNT - FIRST_LINE
 		GOTO INPUT_LOOP
 	ELSE
 		전소비 = 1
@@ -113,6 +314,7 @@ IF GROUPMATCH(내용, 11, 12, 13, 14, 15, 16)
 ELSEIF GROUPMATCH(내용, 1, 2, 3, 4 ,5)
 	IF MONEY < 3000
 		PRINTFORMW 돈이 충분하지 않습니다.
+		CLEARLINE LINECOUNT - FIRST_LINE
 		GOTO INPUT_LOOP
 	ELSE
 		전소비 = 0

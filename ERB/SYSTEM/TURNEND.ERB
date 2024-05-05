@@ -432,7 +432,8 @@ IF GET_COOK() != -1
 		ENDIF
 		BASE:대상:체력 = MIN(BASE:대상:체력 + 회복량:0, MAXBASE:대상:체력)
 		BASE:대상:기력 = MIN(BASE:대상:기력 + 회복량:1, MAXBASE:대상:기력)
-		PRINTFORML 오락담당의 %ANAME(담당자)%의 일에 의해, %ANAME(대상)%의 체력과 기력이 회복했습니다
+		PRINTFORML
+		PRINTFORMW 오락담당인 %ANAME(담당자)%의 일에 의해, %ANAME(대상)%의 체력과 기력이 회복했습니다
 	ELSE
 		SETCOLOR 칼라_주의
 		PRINTFORML 오락담당이 국내에 없다（포로가 되어 있는, 국외에 추방되었다）모아 두어 그 혜택을 받을 수 있지 않습니다
