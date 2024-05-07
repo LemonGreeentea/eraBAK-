@@ -243,6 +243,21 @@ RETURN 1
 #DIM NOW
 #DIM PREV
 
+; 기본 행동 횟수 3
+; 연구를 통해 최대 + 2
+; 함락을 통해 최대 + 4
+; 기타 등등
+; (임시)※ 아직 연구시스템이 없어서 기본 횟수를 4로 설정
+
+행동횟수 = 4
+
+;이곳에 추가 행동횟수 설정 예정
+
+RETURNF 행동횟수
+
+
+;구버전 행동횟수 계산식 - 소속 사관수에 따라 행동량이 늘어남
+[SKIPSTART]
 SIF !CFLAG:MASTER:소속
 	RETURNF 3
 
@@ -262,3 +277,4 @@ LOOP 사관수 >= NOW
 
 RETURNF MAX(행동횟수, 2)
 
+[SKIPEND]
