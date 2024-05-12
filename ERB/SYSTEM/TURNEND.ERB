@@ -463,6 +463,7 @@ FOR LOCAL:0, 0, CHARANUM
 
 	;이 턴～계 플래그를 꺾는다
 	CFLAG:(LOCAL:0):행동완료 = 0
+	CFLAG:(LOCAL:0):데이트행동완료 = 0
 
 	;포로가 아니고, 소속이 특수 세력이 아니면, 조교 카운터를 줄여 간다
 	IF !IS_SP_COUNTRY(CFLAG:LOCAL:포로처) && !IS_SP_COUNTRY(CFLAG:LOCAL:소속)
