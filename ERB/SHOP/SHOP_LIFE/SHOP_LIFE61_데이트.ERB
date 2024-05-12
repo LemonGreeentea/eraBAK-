@@ -10,6 +10,7 @@
 ;   2. 크레딧 소모량 변경(장소별 차등)
 ;   3. 장소 이미지 추가
 ;   4. 캐릭터 데이트구상 출력 시스템 추가(템플릿 파일도 추가)
+;   5. 데이트 조건(안면있음) 및 횟수 제한(캐릭마다 턴당 1회)
 ;
 ; 추가 예정 기능
 ;   1. 특정 지역을 점령하거나 점령한 세력과 동맹일 시 갈 수 있는 데이트 장소 추가(ex. 크루즈선 등)
@@ -37,8 +38,8 @@ RETURN 1
 ;「데이트」의 선택 가능 캐릭터 존재 판정（권할 수 있는 캐릭터）
 ;-------------------------------------------------
 @SHOP_LIFE_CHECKCHARA61(ARG:0)
-;비주인공, 동일 세력, 포로가 아닌, 동물이 아닌, 통상 상태 또는 육아중
-RETURN ARG:0 != MASTER && CFLAG:(ARG:0):소속 == CFLAG:MASTER:소속 && CFLAG:(ARG:0):포로처 == 0 && !IS_ANIMAL(ARG:0) && GROUPMATCH(CFLAG:(ARG:0):행동불능상태, 0, 2)
+;비주인공, 동일 세력, 포로가 아닌, 동물이 아닌, 통상 상태 또는 육아중 + 안면 있음
+RETURN ARG:0 != MASTER && CFLAG:(ARG:0):소속 == CFLAG:MASTER:소속 && CFLAG:(ARG:0):안면 && CFLAG:(ARG:0):포로처 == 0 && !IS_ANIMAL(ARG:0) && GROUPMATCH(CFLAG:(ARG:0):행동불능상태, 0, 2)
 
 ;-------------------------------------------------
 ;「데이트의 왼쪽 컬럼 메뉴의 입력 처리
@@ -53,7 +54,7 @@ RETURN 0
 ;-------------------------------------------------
 @SHOP_LIFE_EVENTBUY_SHOW61
 ;타이틀
-CALL COLUMN_RIGHT_TITLE("대상자 선택", "0", "1", "1～모두", "3, 000～", "자기세력만 가능")
+CALL COLUMN_RIGHT_TITLE("대상자 선택", "0", "1", "1～모두", "3, 000～", "자기세력, 안면있음")
 CALL COLUMN_RIGHT_PRINTL
 CALL COLUMN_RIGHT_LINE
 CALL COLUMN_RIGHT_PRINTL
@@ -88,21 +89,30 @@ RETURN 0
 ;-------------------------------------------------
 ;「데이트」의 수락 확률 계산
 ;-------------------------------------------------
-@SHOP_LIFE_Chance61(난이도,대상,출력여부)
-#DIM 난이도
-#DIM 대상
-#DIM 출력여부
-
+;@SHOP_LIFE_Chance61
+;#FUNCTIONS
 ;난이도 계산
-
-
-
+;LOCALS = 확실
 ;글자출력
 ;불가능, 낮음, 보통, 높음, 확실
+
+;SETCOLOR 0x0099FF
+;PRINTFORMW 확실
+;RESETCOLOR 
+;RETURNF LOCALS
+
+@SHOP_LIFE_Chance61_PRINT(대상,장소)
+#DIM 대상
+#DIMS 장소
+
+PRINTFORM <수락확률 : 
+;확률 계산
+;IF 
 SETCOLOR 0x0099FF
-PRINT 확실
-RESETCOLOR
-RETURN 0
+PRINTFORM 확실
+RESETCOLOR 
+PRINTFORM > 
+RETURN
 
 ;-------------------------------------------------
 ;「데이트」의 리스트 1 입력 처리
@@ -117,6 +127,9 @@ RETURN 0
 #DIM 이벤트발생, 1
 
 FLAG:능력표시모드 = 0
+
+FIRST_LINE = LINECOUNT
+$INPUT_LOOP
 
 이벤트발생 = 0
 LOCAL:5 = 0
@@ -137,15 +150,14 @@ PRINT
 PRINTBUTTON @"%"[공원]", 20, LEFT%", 1
 PRINTL
 PRINT                               
-PRINTFORM <소모 크레딧 : 0>  <수락확률 : 
-CALL SHOP_LIFE_Chance61(1,대상,1)
-PRINTL >
+PRINTFORM <소모 크레딧 : 0>  
+CALL SHOP_LIFE_Chance61_PRINT(대상,"공원")
+PRINTL 
 PRINT                               
 PRINTFORML 공원에서 데이트합니다. 
+PRINTL 
 PRINT                               
 PRINTFORML 
-PRINT                               
-PRINTFORML
 PRINT                               
 PRINTFORML
 PRINT                               
@@ -159,11 +171,12 @@ PRINT
 PRINTBUTTON @"%"[시내]", 20, LEFT%", 2
 PRINTL
 PRINT                               
-PRINTFORM <소모 크레딧 : 0>  <수락확률 : 
-CALL SHOP_LIFE_Chance61(1,대상,1)
-PRINTL >
+PRINTFORM <소모 크레딧 : 1,000>  
+CALL SHOP_LIFE_Chance61_PRINT(대상,"시내")
+PRINTL 
 PRINT                               
 PRINTFORML 시내를 돌아다니면서 데이트합니다.
+PRINTL 
 PRINT                               
 PRINTFORML 선물을 사주거나 맛있는 음식을 먹습니다.
 PRINT                               
@@ -181,9 +194,9 @@ PRINT
 PRINTBUTTON @"%"[게임센터]", 20, LEFT%", 3
 PRINTL
 PRINT                               
-PRINTFORM <소모 크레딧 : 3,000>  <수락확률 : 
-CALL SHOP_LIFE_Chance61(1,대상,1)
-PRINTL >
+PRINTFORM <소모 크레딧 : 3,000>  
+CALL SHOP_LIFE_Chance61_PRINT(대상,"게임센터")
+PRINTL 
 PRINT                               
 PRINTFORML 게임센터에서 데이트합니다. 
 PRINT                               
@@ -200,9 +213,9 @@ PRINT
 PRINTBUTTON @"%"[놀이공원]", 20, LEFT%", 4
 PRINTL
 PRINT                               
-PRINTFORM <소모 크레딧 : 7,000>  <수락확률 : 
-CALL SHOP_LIFE_Chance61(1,대상,1)
-PRINTL >
+PRINTFORM <소모 크레딧 : 7,000>  
+CALL SHOP_LIFE_Chance61_PRINT(대상,"놀이공원")
+PRINTL 
 PRINT                               
 PRINTFORML 종일권을 끊고 놀이공원에서 놉니다.
 PRINT                               
@@ -219,9 +232,9 @@ PRINT
 PRINTBUTTON @"%"[혼욕온천]", 20, LEFT%", 5
 PRINTL
 PRINT                               
-PRINTFORM <소모 크레딧 : 10,000>  <수락확률 : 
-CALL SHOP_LIFE_Chance61(1,대상,1)
-PRINTL >
+PRINTFORM <소모 크레딧 : 10,000>  
+CALL SHOP_LIFE_Chance61_PRINT(대상,"온천")
+PRINTL 
 PRINT                               
 PRINTFORML 온천 티켓을 사용하여 혼욕 온천에 갑니다.
 PRINT                               
@@ -236,8 +249,8 @@ PRINTFORML
 CALL SINGLE_DRAWLINE
 PRINTBUTTON "[0] - 돌아온다", 0
 PRINTFORML
-FIRST_LINE = LINECOUNT
-$INPUT_LOOP
+
+
 INPUT 0
 
 내용 = RESULT
@@ -249,7 +262,10 @@ ENDIF
 
 ;공원, 소모 크레딧 0
 IF 내용 == 1
-	PRINTFORMW %ANAME(대상)%에게 공원 데이트를 신청하시겠습니까?
+	PRINTFORML %ANAME(대상)%에게 공원 데이트를 신청하시겠습니까?
+	PRINTFORM <소모 크레딧 : 0>  
+	CALL SHOP_LIFE_Chance61_PRINT(대상,"공원")
+	PRINTL 
 	CALL ASK_YN
 	IF RESULT == 1
 		CLEARLINE LINECOUNT - FIRST_LINE
@@ -259,7 +275,12 @@ IF 내용 == 1
 	RETURN 1
 ;시내, 소모 크레딧 0
 ELSEIF 내용 == 2
+	IF MONEY < 1000
+		CLEARLINE LINECOUNT - FIRST_LINE
+		GOTO INPUT_LOOP
+	ELSE
 
+	ENDIF
 ;게임센터, 소모 크레딧 3,000
 ELSEIF 내용 == 3
 	IF MONEY < 3000
@@ -287,17 +308,6 @@ ELSEIF 내용 == 5
 ELSE
 	GOTO INPUT_LOOP
 ENDIF
-
-
-
-
-
-
-
-
-
-
-
 
 
 

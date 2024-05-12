@@ -307,14 +307,54 @@ ENDSELECT
 ;함락 보너스 취득
 ;-------------------------------------------------
 @GET_FALLEN_BONUS(ARG:0)
+#DIM FIRST_LINE
+
 
 SIF FLAG:함락인원수 < (FLAG:함락보너스수령수 + 1) * 5
 	RETURN 0
 
+$INPUT_LOOP
+FIRST_LINE = LINECOUNT
+
 CALL SINGLE_EMPTY_LINE()
 CALL COLOR_PRINTL(@"지금까지 타인을 함락 시켜 온 경험으로, 뭔가 얻을 수 있을 생각이 든다……", 칼라_주의)
-CALL ASK_MULTI_JUDGE("수수께끼의매력", !TALENT:MASTER:수수께끼의매력, "하늘의사자", !TALENT:MASTER:하늘의사자, "기사", !TALENT:MASTER:기사, "절륜", !TALENT:MASTER:절륜, "군주의그릇", !TALENT:MASTER:군주의그릇, "구심력", !TALENT:MASTER:구심력, "금", 1)
-SELECTCASE RESULT
+CALL ASK_MULTI_JUDGE("수수께끼의매력", !TALENT:MASTER:수수께끼의매력, "하늘의사자", !TALENT:MASTER:하늘의사자, "기사", !TALENT:MASTER:기사, "절륜", !TALENT:MASTER:절륜, "군주의그릇", !TALENT:MASTER:군주의그릇, "구심력", !TALENT:MASTER:구심력, "추가 행동력", FLAG:함락추가행동력 < 2, "크레딧", 1)
+LOCAL:0 = RESULT
+
+SELECTCASE LOCAL:0
+	CASE 0
+		PRINTFORML 「수수께끼의매력」를 선택합니까?
+		PRINTFORML (수수께끼의매력 설명)
+	CASE 1
+		PRINTFORML 호감도를 얻기 쉬워지는 소질 「하늘의사자」를 선택합니까?
+		PRINTFORML (연모 시키는 루트에 들어오기 쉬워집니다)
+	CASE 2
+		PRINTFORML  아이템 개발이 빨리 되어, 효과가 높아지는 소질 「기사」를 선택합니까?
+		PRINTFORML (많은 아이템은 개발→구입이라는 프로세스를 거치므로, 가져 두면 수수하게 편리합니다)
+	CASE 3
+		PRINTFORML 조교에 의한 체력·기력의 감소가 매우 적게 되는 소질 「절륜」을 선택합니까?
+		PRINTFORML （상당히 격렬한 조교 행동을 한다면 편리합니다）
+	CASE 4
+		PRINTFORML 종속도를 얻기 쉬워지는 소질 「군주의그릇」을 선택합니까?
+		PRINTFORML (굴복 시키는 루트에 들어오기 쉬워집니다)
+	CASE 5
+		PRINTFORML 의존도를 얻기 쉬워지는 소질 「구심력」을 선택합니까?
+		PRINTFORML (연모·종속 어느 쪽의 루트에서도 필요한 값인 것이라 편리합니다)
+	CASE 6
+		PRINTFORML 매 턴 활동할 수 있는 추가 행동력을 선택합니까?
+		PRINTFORML (함락 보상으로 얻을 수 있는 추가 행동력은 최대 2개)
+	CASE 7
+		PRINTFORML 크레딧 50,000을 선택합니까?
+ENDSELECT
+
+CALL ASK_YN
+
+IF RESULT == 1
+	CLEARLINE LINECOUNT - FIRST_LINE
+	GOTO INPUT_LOOP
+ENDIF
+
+SELECTCASE LOCAL:0
 	CASE 0
 		CALL COLOR_PRINTW(@"%조사처리(ANAME(MASTER),"는")%<수수께끼의매력>을 몸에 익혔다", 칼라_주의)
 		TALENT:MASTER:수수께끼의매력 = 1
@@ -334,7 +374,10 @@ SELECTCASE RESULT
 		CALL COLOR_PRINTW(@"%조사처리(ANAME(MASTER),"는")%<구심력>을 몸에 익혔다", 칼라_주의)
 		TALENT:MASTER:구심력 = 1
 	CASE 6
-		CALL COLOR_PRINTW(@"금 50000을 손에 넣었다", 칼라_주의)
+		CALL COLOR_PRINTW(@"매 턴 추가 행동력을 1 획득했다.", 칼라_주의)
+		FLAG:함락추가행동력 ++
+	CASE 7
+		CALL COLOR_PRINTW(@"크레딧 50,000을 손에 넣었다", 칼라_주의)
 		MONEY += 50000
 ENDSELECT
 FLAG:함락보너스수령수 ++
