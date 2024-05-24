@@ -65,8 +65,11 @@ RETURN 1
 #DIM 대상부대
 대상측 = !발동측
 ; PRINTFORML "이, 이건 압수한 물건이니까~!"
+LOCAL = ABL:발동자:성지식
+SIF LOCAL == 0
+LOCAL = 1
 CALL DECREASE_SOLDIER(대상세력, 대상부대, RAND(ABL:발동자:무투*5, ABL:발동자:무투*10), 1)
-CALL INCREASE_SOLDIER(발동세력, 발동부대, RAND(ABL:발동자:성지식*200, ABL:발동자:성지식*300), 1)
+CALL INCREASE_SOLDIER(발동세력, 발동부대, RAND(LOCAL*200, LOCAL*300), 1)
 
 
 @SKILL_2110_SP_0_EXPLANATION
@@ -87,3 +90,17 @@ RESULTS = 적 부대에 데미지를 주고 자신 부대를 회복시킨다.
 #DIM 대상세력
 #DIM 대상부대
 RETURN 750
+
+@총력전_스킬_2110_코스트
+RETURN 3
+
+@총력전_스킬_2110_설명
+RESULTS = 아군 전원에게 치유력 132％ 추가로 적에게 공격력 431％ 대미지
+
+@총력전_스킬_2110_발동(LOCAL)
+#DIM 치유량
+#DIM 대미지
+치유량 = 총력전_치유력:LOCAL * 166 /100
+대미지 = (총력전_공격력:LOCAL * 431 / 100) * (100 - 총력전_보스_방어력) / 100
+CALL 버프처리(,,,치유량,,,,,,,,,5,2110)
+CALL 공격판정처리(대미지,LOCAL)
