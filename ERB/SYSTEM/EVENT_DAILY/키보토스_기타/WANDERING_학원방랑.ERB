@@ -381,6 +381,8 @@ ELSEIF TALENT:선택학생:복종 || TALENT:선택학생:예속
 	PRINTL
 	CALL ASK_MULTI("그래","아니","입학하러 왔다")
 	IF RESULT == 0
+	ELSEIF RESULT == 1
+	ELSEIF RESULT == 2
 		CALL FACE_IMAGE_N(@"얼굴_의복_미소_{선택학생}")
 		PRINTW 「저도… 보고싶었어요…」
 		PRINTL
