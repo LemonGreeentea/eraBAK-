@@ -24,7 +24,7 @@ SETCOLOR 0x7CCEC3
 
 ;-------------------------------------------------
 ;처녀 확인 (1 = 처녀)
-;만남 시작 시 처녀 여부 확인=
+;만남 시작 시 처녀 여부 확인
 SIF TALENT:처녀
 	CFLAG:230 = 1
 ;만남 시작 시 애널처녀 여부 확인
@@ -186,7 +186,7 @@ ENDIF
 ;연인이면서 섹스(합의)한 상태
 IF TALENT:연인 && TALENT:합의
 	PRINTFORMW 「오늘은 뭘 하나요? 신상 디저트 먹기? 강변 데이트? 카페 가기?」
-	PRINTFORMW 「아니면 야한거 하는건가요..♡?」
+	PRINTFORMW 「아니면 오늘도 야한거 하는건가요..♡?」
 ;연인이면서 섹스(합의) 안 한 사이
 ELSEIF TALENT:연인
 	PRINTFORMW 「에헤헤... 오늘도 저랑 데이트하러 오신건가요?」
@@ -849,11 +849,11 @@ IF SELECTCOM == 2
 		ELSEIF TALENT:복종
 			;Ｃ감 Lv3 이상
 			IF ABL:Ｃ감 >= 3
-				PRINTFORMW 「햣, %LOCALS:0%. 기분 좋아요...」
+				PRINTFORMW 「햣, %LOCALS:0%. 보지 기분 좋아요...」
 			;Ｃ감 Lv3 미만
 			ELSE
-				PRINTFORMW 「으읏... %LOCALS:0%, 제 거기 더러운데...」
-				PRINTFORMW 아이리는 %조사처리(ANAME(MASTER),"가")% 자신의 보지를 핥는 것을 불안하게 쳐다본다.
+				PRINTFORMW 「으읏... %LOCALS:0%, 거기 더러운 곳인데...」
+				PRINTFORMW 아이리는 %조사처리(ANAME(MASTER),"가")% 자신의 음부를 핥는 것을 불안하게 쳐다본다.
 			ENDIF
 		;그 이외
 		ELSE
@@ -924,19 +924,24 @@ IF SELECTCOM == 3
 				PRINTFORML 「으읏, 안 쪽 닿아서 이상해요...」
 			;그 이외
 			ELSE
-				;PRINTFORMW 
+				PRINTFORMW 「우읏... 손가락 끝 부분이 들어와...」
+				PRINTFORML 아이리의 음부에 손가락을 하나 밀어넣자 경험이 없는 질내가 손가락을 꼬옥 조여온다.
+				PRINTFORMW 손 끝에 느껴지는 처녀막의 느낌을 즐기면서 손가락을 움직인다.
+				PRINTFORMW 「흣, 흐으... 이상해요...」
 			ENDIF
 		;비처녀
 		ELSE
 			;연모
 			IF TALENT:연모
-				;PRINTFORMW 
+				PRINTFORML 「읏, 손가락이... 안쪽에 닿아서♡」
+				PRINTFORMW 아이리의 음부에 손가락을 집어넣자 달콤한 소리를 내며 몸을 비틀고 있다.
 			;복종
 			ELSEIF TALENT:복종
-				;PRINTFORMW 
+				PRINTFORML 「우읏... %LOCALS:0%, 바로 자지 박으셔도 괜찮은데...」
+				PRINTFORMW 아이리의 음부에 손가락을 밀어넣자 당황하면서도 눈을 감고 %ANAME(MASTER)%의 손가락을 느끼고 있다.
 			;그 이외
 			ELSE
-				;PRINTFORMW 
+				PRINTFORMW 
 			ENDIF
 		ENDIF
 	;2회째 이후
@@ -1643,7 +1648,7 @@ IF SELECTCOM == 30
 		;복종 첫 섹스
 		ELSEIF TALENT:복종
 			PRINTFORMW 아이리를 눕히고 음부에 %ANAME(MASTER)%의 자지를 대자 긴장한 표정으로 자신의 음부를 벌린다.
-			PRINTFORMW 「네에, 저는 %LOCALS:0%의 노예니까... 넣어주세요.」
+			PRINTFORMW 「네에, 저는 %LOCALS:0%의 노예니까... 원하시는대로 해주세요.」
 			PRINTFORMW 아이리는 두려운 듯 손을 떨며 %ANAME(MASTER)%의 물건이 자신의 안에 들어오는 것을 바라보고 있다.
 			PRINTFORMW 「으긋, 힛, 으우....」
 			PRINTFORMW 처녀막이 찢어지는 감촉이 아팠던 것 인지 눈물을 흘리며 신음한다. 
@@ -1651,6 +1656,12 @@ IF SELECTCOM == 30
 
 		;호감도가 -500에서 첫 섹스
 		ELSEIF CFLAG:호감도 <= -500
+			PRINTFORMW 「싫어... 그만해주세요...」
+			PRINTFORMW 「읏, 안돼... 끝 부분 밀어넣지 말아주세요!」
+			PRINTFORML 아이리의 부탁을 무시한 채 %LOCALS:0%의 물건을 아이리의 질내에 밀어넣자 끝부분에서 이물감이 느껴진다.
+			PRINTFORML 처녀막의 감촉을 충분히 느낀 뒤 허리에 힘을 주어 아이리의 처녀의 증거를 산산히 부숴버렸다.
+			PRINTFORMW 「흑, 아파아... 어째서 이런 일을...」
+			PRINTFORMW 눈물 흘리며 %조사처리(ANAME(MASTER),"를")% 원망하는 아이리를 무시한 채 허리를 흔들며 방금까지 처녀였던 질내를 즐긴다.
 
 		;그 외 첫 섹스
 		ELSE
@@ -1683,13 +1694,15 @@ IF SELECTCOM == 30
 			IF ABL:Ｖ감 >= 3
 				SELECTCASE RAND:4
 					CASE 0
-					
+						PRINTFORMW 「힛, 햐앗♡ 기분 좋은 곳 닿아서...♡」
+						PRINTFORMW 「%LOCALS:0%, 너무 좋아요♡」
 					CASE 1
-					
+						PRINTFORMW 「힛, 햣... 제 보지 기분 좋은가요?」
+						PRINTFORMW 「다행이에요♡ 제 보지라도 쓸모가 있어서.... 히읏」
 					CASE 2
-					
+						PRINTFORMW 「조아요오... %LOCALS:0%의 자지 너무 좋아요♡」
 					CASE 3
-
+						PRINTFORMW 「하아... 핫, 제 안쪽 기분 좋아요?♡」
 				ENDSELECT
 			;V감도 2 이하
 			ELSE

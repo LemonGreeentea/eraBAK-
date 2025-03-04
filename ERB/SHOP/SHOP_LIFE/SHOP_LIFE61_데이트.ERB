@@ -176,9 +176,8 @@ CALL SHOP_LIFE_Chance61_PRINT(대상,"시내")
 PRINTL 
 PRINT                               
 PRINTFORML 시내를 돌아다니면서 데이트합니다.
-PRINTL 
 PRINT                               
-PRINTFORML 선물을 사주거나 맛있는 음식을 먹습니다.
+PRINTFORML 선물을 사주거나 함께 음식을 먹습니다.
 PRINT                               
 PRINTFORML
 PRINT                               
@@ -280,8 +279,20 @@ ELSEIF 내용 == 2
 		CLEARLINE LINECOUNT - FIRST_LINE
 		GOTO INPUT_LOOP
 	ELSE
-
+		PRINTFORML %ANAME(대상)%에게 시내 데이트를 신청하시겠습니까?
+		PRINTFORM <소모 크레딧 : 1,000>  
+		CALL SHOP_LIFE_Chance61_PRINT(대상,"시내")
+		PRINTL 
+		CALL ASK_YN
+		IF RESULT == 1
+			CLEARLINE LINECOUNT - FIRST_LINE
+			GOTO INPUT_LOOP
+		ENDIF
+		CALL SHOP_LIFE61_DATE_PLACE2(대상)
+		CFLAG:대상:데이트행동완료 ++
 	ENDIF
+	CFLAG:대상:데이트행동완료 ++
+	RETURN 1
 ;게임센터, 소모 크레딧 3,000
 ELSEIF 내용 == 3
 	IF MONEY < 3000
@@ -289,6 +300,8 @@ ELSEIF 내용 == 3
 		GOTO INPUT_LOOP
 	ELSE
 
+	CFLAG:대상:데이트행동완료 ++
+	RETURN 1
 	ENDIF
 ;놀이공원, 소모크레딧 7,000
 ELSEIF 내용 == 4
@@ -297,6 +310,8 @@ ELSEIF 내용 == 4
 		GOTO INPUT_LOOP
 	ELSE
 
+	CFLAG:대상:데이트행동완료 ++
+	RETURN 1
 	ENDIF
 ;혼욕온천, (임시)소모크레딧 10,000
 ELSEIF 내용 == 5
@@ -305,13 +320,15 @@ ELSEIF 내용 == 5
 		GOTO INPUT_LOOP
 	ELSE
 
+	CFLAG:대상:데이트행동완료 ++
+	RETURN 1
 	ENDIF
 ELSE
 	GOTO INPUT_LOOP
 ENDIF
 
 
-
+[SKIPSTART]
 IF GROUPMATCH(내용, 11, 12, 13, 14, 15, 16)
 	IF MONEY < 3000 * (CALC_SHOP_TIME() - SHOP_TIME)
 		PRINTFORMW 돈이 충분하지 않습니다.
@@ -475,3 +492,4 @@ BEGIN TURNEND
 
 RETURN 1
 
+[SKIPEND]

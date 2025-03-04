@@ -10,6 +10,8 @@
 ;-------------------------------------------------
 @SHOP_LIFE61_DATE_PLACE1(대상)
 #DIM 대상
+#DIM 호감증가
+
 LOCAL:0 = TARGET
 
 PRINTFORM %조사처리(ANAME(대상),"에게")% 데이트 신청 중 . . .
@@ -18,21 +20,45 @@ WAIT
 ; 이곳에 데이트 거절/수락 구상 추가 예정
 ;------------
 
-PRINTFORMW %조사처리(ANAME(대상),"가")% 수락하였습니다.
+PRINTFORMW %조사처리(ANAME(대상),"가")% 데이트 신청을 수락하였습니다.
 
-PRINTFORMW %조사처리(ANAME(대상),"와")% 공원 데이트를 하였다.
+PRINTFORMW %조사처리(ANAME(대상),"와")% 함께 공원을 갔다.
 PRINTFORMW 
 
+
+;
+; 대상의 전용 데이트구상이 있다면 먼저 출력이 된다.
+; 데이트구상이 없다면 범용 구상이 출력된다.
+;
 CALL IS_DATE_KOJO(대상)
 IF RESULT == 1
 	PRINTFORMW 구상 존재!
+; 
+; 연모, 복종, 일반 상황에서 각각 상황 출력 예정 
+;
 ELSE
-	PRINTFORMW 구상 미존재!
+	IF 
+
+	; 일반 상황
+	SELECTCASE RAND:3
+		CASE 0
+			PRINTFORMW 공원에서 함께 놀았다
+		CASE 1
+			PRINTFORMW 공원을 돌아다니며 느긋하게 시간을 보냈다
+		CASE 2
+			PRINTFORMW 벤치에 앉아 잡담을 하였다.
+	ENDSELECT
+
 ENDIF
 
 
+CFLAG:대상:호감도 += 호감증가
 SHOP_TIME ++
 BEGIN TURNEND
 PRINTFORMW
 
 RETURN
+
+
+@SHOP_LIFE61_DATE_PLACE2(대상)
+#DIM 대상
