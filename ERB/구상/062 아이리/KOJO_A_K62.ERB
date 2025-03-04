@@ -795,30 +795,38 @@ IF SELECTCOM == 1
 	IF IS_COM_FIRST()
 		;연모
 		IF TALENT:연모
-			;Ｂ감 Lv3 이상
-			IF ABL:Ｂ감 >= 3
-				PRINTFORMW 
-			;Ｂ감 Lv3 미만
-			ELSE
-				PRINTFORMW 
-			ENDIF
+			PRINTFORML 「제 가슴을 만지고 싶다구요?」
+			PRINTFORML 아이리는 한참 고민하더니 %ANAME(MASTER)% 앞에 서서 귀에 대고 '변태'라고 말한 뒤, 웃옷을 벗고 가슴을 내민다. 
+			PRINTFORMW 「에헤헤... 제 가슴이 그렇게 좋으신가요?」
 		;복종
 		ELSEIF TALENT:복종
 			;Ｂ감 Lv3 이상
 			IF ABL:Ｂ감 >= 3
-				PRINTFORMW 
+				PRINTFORML 아이리에게 가슴을 만지고 싶다고 하자 %ANAME(MASTER)%에게 가슴을 내민다.
+				PRINTFORMW 「읏, %ANAME(MASTER)%, 마음껏 만지셔도 좋... 히읏♡」
+				PRINTFORML 손이 가슴에 닿자마자 달콤한 소리를 내며 %ANAME(MASTER)%의 손길을 즐기고 있다.
 			;Ｂ감 Lv3 미만
 			ELSE
-				PRINTFORMW 
+				PRINTFORMW 「제 가슴을 만지고 싶으시다구요?」
+				PRINTFORML 아이리는 볼이 빨개진 상태로 %ANAME(MASTER)% 앞에 다가와 %ANAME(MASTER)%의 손을 잡고 자신의 가슴 위에 가져간다.
+				PRINTFORMW 「우, %LOCALS:0% 마음껏 만져주세요.」
 			ENDIF
 		;그 이외
 		ELSE
 			;Ｂ감 Lv3 이상
 			IF ABL:Ｂ감 >= 3
-				;PRINTFORMW 
+				PRINTFORMW 「햐으응?!!」
+				PRINTFORML %ANAME(MASTER)%의 손이 가슴에 닿자 아이리는 괴상한 소리를 내며 놀란 표정을 지었다.
+				PRINTFORMW 「그, 갑자기 손을 대셔서 놀라서....」
+				PRINTFORML 아이리는 부끄러웠는지 횡설수설 해명하기 시작했고 %조사처리(ANAME(MASTER),"은")% 듣지도 않고 다시 가슴에 손을 댄다.
+				PRINTFORMW 「흐으읏...♡ 자, 잠깐만요. 아직 마음의 준비가 안됐어요.」
 			;Ｂ감 Lv3 미만
 			ELSE
-				;PRINTFORMW 
+				PRINTFORMW 「!!!!」
+				PRINTFORML %조사처리(ANAME(MASTER),"가")% 가슴에 손을 대자 놀란 듯 쳐다본다.
+				PRINTFORMW 「우... 만지고 싶으신가요...? 가슴은 자신 없는데요..」
+				PRINTFORML 만지고 싶다고 말하자 %ANAME(MASTER)% 앞에 다가와 작은 가슴을 내민다.
+				PRINTFORMW 「대신 안 아프게 만져주세요...?」
 			ENDIF
 		ENDIF
 	;2회째 이후
@@ -827,28 +835,28 @@ IF SELECTCOM == 1
 		IF TALENT:연모
 			;Ｂ감 Lv3 이상
 			IF ABL:Ｂ감 >= 3
-				;PRINTFORMW 
+				PRINTFORMW 「가슴 기분 좋아요♡」
 			;Ｂ감 Lv3 미만
 			ELSE
-				;PRINTFORMW 
+				PRINTFORMW 「에헤헤... 제 가슴이 그렇게 좋으신가요?」
 			ENDIF
 		;복종
 		ELSEIF TALENT:복종
 			;Ｂ감 Lv3 이상
 			IF ABL:Ｂ감 >= 3
-				;PRINTFORMW 
+				PRINTFORMW 「읏, %ANAME(MASTER)%, 마음껏 만지셔도 좋... 히읏♡」
 			;Ｂ감 Lv3 미만
 			ELSE
-				;PRINTFORMW 
+				PRINTFORMW 「제 가슴 기분 좋으신가요...?」
 			ENDIF
 		;그 이외
 		ELSE
 			;Ｂ감 Lv3 이상
 			IF ABL:Ｂ감 >= 3
-				;PRINTFORMW 
+				PRINTFORMW 「햐으... 손 끝이 닿을 때 마다 찌릿해요...」
 			;Ｂ감 Lv3 미만
 			ELSE
-				;PRINTFORMW 
+				PRINTFORMW 「읏, 간지러워요」
 			ENDIF
 		ENDIF
 	ENDIF
@@ -890,10 +898,12 @@ IF SELECTCOM == 2
 			IF ABL:Ｃ감 >= 3
 				PRINTFORMW 「햐앗..?!」
 				PRINTFORML %ANAME(MASTER)%의 혀가 아이리의 보지에 닿자 놀란 듯한 표정을 짓고 있다.
-				PRINTFORMW 「흐읏...♡ %조사처리(LOCALS:0,"가")%의 혀, 기분 좋아...♡」
+				PRINTFORMW 「흐읏...♡ %LOCALS:0%의 혀, 기분 좋아...♡」
 			;Ｃ감 Lv3 미만
 			ELSE
-				PRINTFORMW 「」
+				PRINTFORMW 「읏... 안돼요. 거긴 더러워요...」
+				PRINTFORML 아이리는 %조사처리(ANAME(MASTER),"가")% 음부를 혀로 핥자 놀란 듯 그만두라고 부탁한다.
+				PRINTFORMW 「으읏... 간지럽기만 해요... 그만해주세요.」
 			ENDIF
 		ENDIF
 	;2회째 이후
@@ -902,28 +912,30 @@ IF SELECTCOM == 2
 		IF TALENT:연모
 			;Ｃ감 Lv3 이상
 			IF ABL:Ｃ감 >= 3
-				;PRINTFORMW 
+				PRINTFORML 「힛... %LOCALS:0%, 좀 더 핥아주세요♡」
+				PRINTFORMW 아이리는 %ANAME(MASTER)%의 혀놀림에 기쁘게 받아들이고 있다.
 			;Ｃ감 Lv3 미만
 			ELSE
-				;PRINTFORMW 
+				PRINTFORML 「으읏... 간지러워요...♡ 제 보지가 그렇게 맛있나요?」
+				PRINTFORMW 아이리는 %조사처리(ANAME(MASTER),"을")% 사랑스러운 눈빛으로 쳐다보고 있다.
 			ENDIF
 		;복종
 		ELSEIF TALENT:복종
 			;Ｃ감 Lv3 이상
 			IF ABL:Ｃ감 >= 3
-				;PRINTFORMW 
+				PRINTFORMW 「아앗... 좋아요... %ANAME(MASTER)%의 혀, 기분 좋아요...♡」 
 			;Ｃ감 Lv3 미만
 			ELSE
-				;PRINTFORMW 
+				PRINTFORMW 「으읏.. 간지러워요...」
 			ENDIF
 		;그 이외
 		ELSE
 			;Ｃ감 Lv3 이상
 			IF ABL:Ｃ감 >= 3
-				;PRINTFORMW 
+				PRINTFORMW 「흣... 거기 핥으면... 느껴버려♡」
 			;Ｃ감 Lv3 미만
 			ELSE
-				;PRINTFORMW 
+				PRINTFORMW 「힛, 핥지 말아주세요....!」
 			ENDIF
 		ENDIF
 	ENDIF
