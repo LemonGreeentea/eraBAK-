@@ -9,19 +9,39 @@
 ;=================================================
 @KOJO_EVENT_K62(ARG)
 SETCOLOR 0x7CCEC3
+
+;------------------------------------------------
+;호칭의 설정
+;------------------------------------------------
+;노예면 '주인님'이라고 부름
+IF IS_SLAVE(TARGET)
+	LOCALS:0 = 주인님
+;아나타가 [선생]이면 '선생님'이라고 부름
+ELSEIF TALENT:MASTER:선생 == 1
+	LOCALS:0 = 선생님
+;친구라면 ~짱으로 부름
+ELSEIF TALENT:친구
+	LOCALS:0 = %ANAME(MASTER)%짱
+;그 외엔 이름으로 부름
+ELSE
+	LOCALS:0 = %ANAME(MASTER)%
+ENDIF
+
 ;-------------------------------------------------
 ;퍼스트 키스 실행
 ;-------------------------------------------------
 IF ARG == 1
-	;연모 or 복종
-	IF TALENT:연모 || TALENT:복종
-		;PRINTFORMW 
-	;연인
-	ELSEIF TALENT:연인
-		;PRINTFORMW 
+	;연모
+	IF TALENT:연모
+		;PRINTFORMW 퍼스트키스 성공(연모)
+
+	;복종
+	ELSEIF TALENT:복종
+		;PRINTFORMW 퍼스트키스 성공(복종)
+
 	;그 이외
 	ELSE
-		;PRINTFORMW 
+		;PRINTFORMW 퍼스트키스 성공(일반) 
 	ENDIF
 	RETURN 0
 ENDIF
@@ -30,12 +50,17 @@ ENDIF
 ;고백 성공
 ;-------------------------------------------------
 IF ARG == 2
-	;연모 or 복종
-	IF TALENT:연모 || TALENT:복종
-		;PRINTFORMW 
+	;연모
+	IF TALENT:연모
+		;PRINTFORMW 고백 성공(연모)
+
+	;복종
+	ELSEIF TALENT:복종
+		;PRINTFORMW 고백 성공(복종)
+
 	;그 이외
 	ELSE
-		;PRINTFORMW 
+		;PRINTFORMW 고백 성공(일반) 
 	ENDIF
 	RETURN 0
 ENDIF
@@ -44,7 +69,7 @@ ENDIF
 ;고백 실패
 ;-------------------------------------------------
 IF ARG == 3
-	;PRINTFORMW 
+	;PRINTFORMW 고백 실패
 	RETURN 0
 ENDIF
 
@@ -52,7 +77,10 @@ ENDIF
 ;쓰러트리기 성공(술에 취함의 영향·합의는 얻을 수 없다)
 ;-------------------------------------------------
 IF ARG == 4
-	;PRINTFORMW 
+	CALL FACE_IMAGE_N("표정_62_일반_3")
+	PRINTFORMW 「후읏? 뭔가요오~?」
+	PRINTFORMW 「에헤헤, 엣치이? 좋아요오~」
+	PRINTFORMW 아이리는 취기에 이끌려 %조사처리(ANAME(MASTER),"가")% 쓰러트리는것도 받아들었다. 
 	RETURN 0
 ENDIF
 
@@ -60,12 +88,15 @@ ENDIF
 ;쓰러트리기 성공(합의를 취득)
 ;-------------------------------------------------
 IF ARG == 5
-	;연모 or 복종
-	IF TALENT:연모 || TALENT:복종
-		;PRINTFORMW 
+	;연모
+	IF TALENT:연모
+		PRINTFORMW
+	;복종
+	ELSEIF TALENT:복종
+		PRINTFORMW  
 	;그 이외
 	ELSE
-		;PRINTFORMW 
+		PRINTFORMW 
 	ENDIF
 	RETURN 0
 ENDIF
@@ -74,7 +105,7 @@ ENDIF
 ;쓰러트리기 실패
 ;-------------------------------------------------
 IF ARG == 6
-	;PRINTFORMW 
+	;PRINTFORMW 쓰러트리기 실패 
 	RETURN 0
 ENDIF
 
@@ -82,7 +113,7 @@ ENDIF
 ;쓰러트리기 성공(이미 합의 있어)
 ;-------------------------------------------------
 IF ARG == 7
-	;PRINTFORMW 
+	;PRINTFORMW 쓰러트리기 성공(이미 합의)
 	RETURN 0
 ENDIF
 
@@ -95,10 +126,64 @@ IF ARG == 10
 ENDIF
 
 ;-------------------------------------------------
+;조교 중 이벤트
+;-------------------------------------------------
+;피로에서 회복
+IF ARG == 11
+;
+;ELSEIF ARG == 13
+;	PRINTFORMW 
+;	RETURN 0
+;화남
+ELSEIF ARG == 13
+	CALL FACE_IMAGE_N("표정_62_일반_5")
+	PRINTFORMW 「그만해주세요!」
+	RETURN 0
+;슬픔
+ELSEIF ARG == 14
+	CALL FACE_IMAGE_N("표정_62_일반_6")
+	PRINTFORMW 「흑, 히끅... 너무해요...」
+	RETURN 0
+;침실호출에서 화남
+ELSEIF ARG == 15
+	CALL FACE_IMAGE_N("표정_62_일반_5")
+	PRINTFORMW 「자꾸 그러시면 저, 화낼거에요!」
+	RETURN 0
+;침실호출에서 슬픔
+ELSEIF ARG == 14
+	CALL FACE_IMAGE_N("표정_62_일반_6")
+	PRINTFORMW 「%LOCALS:0%, 너무해요! 히끅..」
+	RETURN 0
+;포로 조교 중 체력이 떨어짐
+ELSEIF ARG == 17
+	CALL FACE_IMAGE_N("표정_62_일반_6")
+	PRINTFORMW 「이젠.... 무리...」
+	RETURN 0
+ELSEIF ARG == 19
+	CALL FACE_IMAGE_N("표정_62_일반_1")
+	PRINTFORMW 「이, 이제 괜찮아요!」
+	RETURN 0
+;기절했다가 회복
+ELSEIF ARG == 20
+	CALL FACE_IMAGE_N("표정_62_일반_4")
+	PRINTFORMW 「읏, 저 정신을 잃었나요..?」
+	RETURN 0
+ENDIF
+
+;-------------------------------------------------
 ;데이트중에 저쪽에서 키스
 ;-------------------------------------------------
 IF ARG == 20
-	;PRINTFORMW 
+	;연모
+	IF TALENT:연모
+		PRINTFORMW
+	;복종
+	ELSEIF TALENT:복종
+		PRINTFORMW  
+	;그 이외
+	ELSE
+		PRINTFORMW 
+	ENDIF
 	RETURN 0
 ENDIF
 
@@ -134,11 +219,11 @@ ENDIF
 IF ARG == 22
 	;PRINTFORMW 
 	RETURN 0
-;합의 이루어＆취한 기세
+;합의 없음＆취한 상태
 ELSEIF ARG == 23
 	;PRINTFORMW 
 	RETURN 0
-;합의 있어
+;합의 있음
 ELSEIF ARG == 24
 	;PRINTFORMW 
 	RETURN 0
@@ -170,7 +255,7 @@ ELSEIF ARG == 29
 ENDIF
 
 ;-------------------------------------------------
-;취기 한계에서 넘어진다
+;너무 취해서 쓰러진다
 ;-------------------------------------------------
 IF ARG == 32
 	;PRINTFORMW 
@@ -178,17 +263,92 @@ IF ARG == 32
 ENDIF
 
 ;-------------------------------------------------
-;임신 발각
+;임신 확인
 ;-------------------------------------------------
 IF ARG == 40
-	;포로 조교
+	;해당 캐릭터와 플레이어가 소속이 같다면
+	IF CFLAG:1 == CFLAG:MASTER:1
+		;주인공이 임신
+		IF CFLAG:아이의부친 == GET_ID(MASTER)
+			IF TALENT:연모
+				;PRINTFORMW 주인공이 임신
+			ELSEIF TALENT:복종
+
+			ELSEIF CFLAG:호감도 <= -500
+
+			ELSE 
+
+			ENDIF
+
+		;아이의 아빠가 불명
+		ELSEIF CFLAG:아이의부친 == -10
+			CALL FACE_IMAGE_N("표정_62_일반_2")
+			PRINTFORMW 「어째선지 요즘 그 날이 안오는데 혹시...?」
+			PRINTFORML 아이리는 혹시나 하는 마음에 테스트기를 사용했다.
+			CALL FACE_IMAGE_N("표정_62_일반_6")
+			PRINTFORML 「으으읏.... 어, 어쩌지...」
+			PRINTFORMW 「아기, 생겨버렸어...」
+			PRINTFORML 테스트 결과 선명하게 표시된 두 줄을 보며 전전긍긍하고 있다.
+			PRINTFORMW 「아빠가 누군지도 모르는데... 우우...」
+
+		;다른 사관의 아이를 임신
+		;특정 캐릭터의 임신구상을 쓰고 싶다면 여기에 작성
+		ELSE
+
+		ENDIF
+	;해당 플레이어가 다른 동아리 소속
+	ELSE
+		;플레이어의 아이
+		IF CFLAG:아이의부친 == GET_ID(MASTER)
+			IF TALENT:연모
+				;PRINTFORMW 주인공이 임신
+			ELSEIF TALENT:복종
+
+			ELSEIF CFLAG:호감도 <= -500
+
+			ELSE 
+
+			ENDIF
+
+		ELSEIF CFLAG:아이의부친 == -10
+			CALL FACE_IMAGE_N("표정_62_일반_2")
+			PRINTFORMW 「어째선지 요즘 그 날이 안오는데 혹시...?」
+			PRINTFORML 아이리는 혹시나 하는 마음에 테스트기를 사용했다.
+			CALL FACE_IMAGE_N("표정_62_일반_6")
+			PRINTFORML 「으으읏.... 어, 어쩌지...」
+			PRINTFORMW 「아기, 생겨버렸어...」
+			PRINTFORML 테스트 결과 선명하게 표시된 두 줄을 보며 전전긍긍하고 있다.
+			PRINTFORMW 「아빠가 누군지도 모르는데... 우우...」
+		ELSE
+
+
+		ENDIF
+
+	ENDIF
+
+
+
+
+
+
+[SKIPSTART]
+	;자국소속
 	IF CFLAG:9 == CFLAG:MASTER:1
+		PRINTFORMW {CFLAG:23}
 		;종 친불명
-		IF CFLAG:23 == 0
+		IF CFLAG:23 == -10
+		
 			IF ABL:출산 >= 3
-				;PRINTFORMW 
+				;PRINTFORMW
 			ELSE
-				;PRINTFORMW 
+				CALL FACE_IMAGE_N("표정_62_일반_2")
+				PRINTFORMW 「어째선지 요즘 그 날이 안오는데」
+				PRINTFORML 아이리는 혹시나 하는 마음에 테스트기를 사용했다.
+				CALL FACE_IMAGE_N("표정_62_일반_6")
+				PRINTFORML 「으으읏.... 어, 어쩌지...」
+				PRINTFORMW 「아기, 생겨버렸어...」
+				PRINTFORML 테스트 결과 선명하게 표시된 두 줄을 보며 전전긍긍하고 있다.
+				PRINTFORMW 「아빠가 누군지도 모르는데... 우우...」
 			ENDIF
 		;주인공인 아이를 임신했다
 		ELSEIF CFLAG:23 == GET_ID(MASTER)
@@ -208,7 +368,14 @@ IF ARG == 40
 			;PRINTFORMW 
 		;다른 사관인 아이를 임신했다
 		ELSE
-			;PRINTFORMW 
+			CALL FACE_IMAGE_N("표정_62_일반_2")
+			PRINTFORMW 「어째선지 요즘 그 날이 안오는데」
+			PRINTFORML 아이리는 혹시나 하는 마음에 테스트기를 사용했다.
+			CALL FACE_IMAGE_N("표정_62_일반_6")
+			PRINTFORML 「으으읏.... 어, 어쩌지...」
+			PRINTFORMW 「아기, 생겨버렸어...」
+			PRINTFORML 테스트 결과 선명하게 표시된 두 줄을 보며 전전긍긍하고 있다.
+			PRINTFORMW 「아빠가 누군지도 모르는데... 우우...」
 		ENDIF
 	;포로 조교 이외
 	ELSE
@@ -217,7 +384,14 @@ IF ARG == 40
 			IF ABL:출산 >= 3
 				;PRINTFORMW 
 			ELSE
-				;PRINTFORMW 
+				CALL FACE_IMAGE_N("표정_62_일반_2")
+				PRINTFORMW 「어째선지 요즘 그 날이 안오는데」
+				PRINTFORML 아이리는 혹시나 하는 마음에 테스트기를 사용했다.
+				CALL FACE_IMAGE_N("표정_62_일반_6")
+				PRINTFORML 「으으읏.... 어, 어쩌지...」
+				PRINTFORMW 「아기, 생겨버렸어...」
+				PRINTFORML 테스트 결과 선명하게 표시된 두 줄을 보며 전전긍긍하고 있다.
+				PRINTFORMW 「아빠가 누군지도 모르는데... 우우...」
 			ENDIF
 		;주인공인 아이를 임신했다
 		ELSEIF CFLAG:23 == GET_ID(MASTER)
@@ -233,9 +407,10 @@ IF ARG == 40
 			;PRINTFORMW 
 		;다른 사관인 아이를 임신했다
 		ELSE
-			;PRINTFORMW 
+
 		ENDIF
 	ENDIF
+[SKIPEND]
 	RETURN 0
 ENDIF
 
@@ -370,12 +545,23 @@ IF ARG == 65
 ENDIF
 
 ;-------------------------------------------------
+;공허를 획득
+;-------------------------------------------------
+IF ARG == 78
+	CALL FACE_IMAGE_N("표정_62_일반_6")
+	PRINTFORMW 「이젠 더 이상은 싫어...」
+	RETURN 0
+ENDIF
+
+;-------------------------------------------------
 ;혼인의식(선택시)
 ;-------------------------------------------------
 IF ARG == 90
 	;PRINTFORMW 
 	RETURN 0
 ENDIF
+
+
 
 ;-------------------------------------------------
 ;혼인의식(이벤트시)
@@ -578,15 +764,15 @@ ENDIF
 ;-------------------------------------------------
 ;야전
 IF ARG == 300
-	;PRINTFORMW 
+	PRINTFORMW 「적 발견. 대응하겠습니다!」 
 	RETURN 0
 ;방위전(침공측)
 ELSEIF ARG == 301
-	;PRINTFORMW 
+	PRINTFORMW 「모두들, 파이팅이에요!」 
 	RETURN 0
 ;방위전(방위측)
 ELSEIF ARG == 302
-	;PRINTFORMW 
+	PRINTFORMW 「나쁜 사람은 용서 못 해요!」 
 	RETURN 0
 ENDIF
 
@@ -673,17 +859,24 @@ ENDIF
 ;-------------------------------------------------
 ;포로 조교의 메뉴
 ;-------------------------------------------------
-;해방된다
+;석방된다.
 IF ARG == 340
-	;PRINTFORMW 
+	CALL FACE_IMAGE_N("표정_62_일반_6")
+	PRINTFORMW 「우으... 드디어 풀려났어」
 	RETURN 0
 ;처형된다
 ELSEIF ARG == 341
-	;PRINTFORMW 
+	CALL FACE_IMAGE_N("표정_62_일반_6")
+	PRINTFORMW 「나츠짱... 요시미짱... 카즈사짱...」
+	PRINTFORMW 「미안해...」
 	RETURN 0
-;성 노예화 된다
+;해방된다
 ELSEIF ARG == 342
-	;PRINTFORMW 
+	CALL FACE_IMAGE_N("표정_62_일반_6")
+	PRINTFORMW 「우으... 드디어 풀려났어」
+	RETURN 0
+;촉수처형
+ELSEIF ARG == 343
 	RETURN 0
 ENDIF
 
@@ -703,66 +896,3 @@ ELSEIF ARG == 352
 	;PRINTFORMW 
 	RETURN 0
 ENDIF
-
-;-------------------------------------------------
-;단칼·카린 관계
-;-------------------------------------------------
-;[단칼에 연모]를 취득
-IF ARG == 400
-	;PRINTFORMW 
-	RETURN 0
-;[단칼의 연인]를 취득
-ELSEIF ARG == 401
-	;PRINTFORMW 
-	RETURN 0
-;[단칼에 연모]를 상실
-ELSEIF ARG == 402
-	;PRINTFORMW 
-	RETURN 0
-;단칼과 헤어지게 하는 것을 성공
-ELSEIF ARG == 403
-	;PRINTFORMW 
-	RETURN 0
-;단칼과 헤어지게 하는 것을 실패
-ELSEIF ARG == 404
-	;PRINTFORMW 
-	RETURN 0
-;[조조에게 연모]를 취득
-ELSEIF ARG == 410
-	;PRINTFORMW 
-	RETURN 0
-;[조조의 연인]를 취득
-ELSEIF ARG == 411
-	;PRINTFORMW 
-	RETURN 0
-;[조조에게 연모]를 상실
-ELSEIF ARG == 412
-	;PRINTFORMW 
-	RETURN 0
-;조조와 헤어지게 하는 것을 성공
-ELSEIF ARG == 413
-	;PRINTFORMW 
-	RETURN 0
-;조조와 헤어지게 하는 것을 실패
-ELSEIF ARG == 414
-	;PRINTFORMW 
-	RETURN 0
-ENDIF
-
-;-------------------------------------------------
-;역조교시
-;-------------------------------------------------
-;주인공에게 충성을 맹세하게 한다
-IF ARG == 450
-	;PRINTFORMW 
-	RETURN 0
-;주인공에게 충성을 맹세하게 한다/성공
-ELSEIF ARG == 451
-	;PRINTFORMW 
-	RETURN 0
-;주인공에게 충성을 맹세하게 한다/실패
-ELSEIF ARG == 452
-	;PRINTFORMW 
-	RETURN 0
-ENDIF
-RESETCOLOR

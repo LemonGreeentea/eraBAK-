@@ -1,7 +1,7 @@
 ﻿;===============================================
 ; EraBlueArchiveK 아이리 구상 A세트(만나러간다, 침실호출)
 ; 제작자 : 레몬녹차
-; 구상 최종 수정 : 2024-04-14
+; 구상 최종 수정 : 2024-05-04
 ; 
 ; 자칭 '평범'호소인이 아닌 진짜 '평범'한 학생 아이리 구상
 ; 아이리 귀여워 (★≧▽^))★☆
@@ -18,9 +18,26 @@
 ;●「만나러간다」의 개시시의 대사
 ; - 
 ; - 
-;=================================================
+;================================================
 @KOJO_TRAIN_START_A1_K62
 SETCOLOR 0x7CCEC3
+
+;-------------------------------------------------
+;처녀 확인 (1 = 처녀)
+;만남 시작 시 처녀 여부 확인
+SIF TALENT:처녀
+	CFLAG:230 = 1
+;만남 시작 시 애널처녀 여부 확인
+SIF TALENT:애널처녀
+	CFLAG:231 = 1
+;만남 시작 시 키스미경험 여부 확인
+SIF TALENT:키스미경험
+	CFLAG:232 = 1
+;만남 시작 시 동정 여부 확인
+SIF TALENT:동정
+	CFLAG:232 = 1
+;-------------------------------------------------
+
 ;------------------------------------------------
 ;호칭의 설정
 ;------------------------------------------------
@@ -169,7 +186,7 @@ ENDIF
 ;연인이면서 섹스(합의)한 상태
 IF TALENT:연인 && TALENT:합의
 	PRINTFORMW 「오늘은 뭘 하나요? 신상 디저트 먹기? 강변 데이트? 카페 가기?」
-	PRINTFORMW 「아니면 야한거 하는건가요..♡?」
+	PRINTFORMW 「아니면 오늘도 야한거 하는건가요..♡?」
 ;연인이면서 섹스(합의) 안 한 사이
 ELSEIF TALENT:연인
 	PRINTFORMW 「에헤헤... 오늘도 저랑 데이트하러 오신건가요?」
@@ -213,6 +230,28 @@ RESETCOLOR
 ;=================================================
 @KOJO_TRAIN_END_A1_K62
 SETCOLOR 0x7CCEC3
+
+;-------------------------------------------------
+;비처녀 확인 (0 = 비처녀)
+;커맨드 시작 시 처녀 여부 확인
+SIF !TALENT:처녀
+	CFLAG:230 = 0
+;커맨드 시작 시 애널처녀 여부 확인
+SIF !TALENT:애널처녀
+	CFLAG:231 = 0
+;커맨드 시작 시 키스미경험 여부 확인
+SIF !TALENT:키스미경험
+	CFLAG:232 = 0
+;커맨드 시작 시 동정 여부 확인
+SIF !TALENT:동정
+	CFLAG:232 = 0
+;-------------------------------------------------
+
+;[공허]상태의 경우, 입이 막히고 있는 경우는 구상을 표시하지 않는다
+IF TALENT:공허 || IS_EQUIP_CONTINUE(TARGET, "입장착")
+	RETURN 0
+ENDIF
+
 ;[공허]상태라면 구상을 표시하지 않는다
 IF TALENT:공허
 	PRINTFORMW 아이리는 당신이 방을 나서도 눈동자조차 움직이지 않는다. 
@@ -298,26 +337,21 @@ IF TALENT:공허
 ENDIF
 
 ;연인이면서 섹스(합의)한 상태
-IF TALENT:연인 && TALENT:합의
-	;PRINTFORMW 
-;연인이면서 섹스(합의) 안 한 사이
-ELSEIF TALENT:연인
-	;PRINTFORMW
+IF TALENT:연인 && TALENT:연모
+	PRINTFORMW 「후후, 오늘도 엣치 하는건가요?」
+	PRINTFORMW 「같이 기분 좋아져요?」
 ;복종이면서 섹스(합의)한 사이
-ELSEIF TALENT:복종 && TALENT:합의
-	;PRINTFORMW 
-;복종이면서 섹스(합의) 안 한 사이
 ELSEIF TALENT:복종
-	;PRINTFORMW 
+	PRINTFORMW 「읏, 오늘도 하는건가요...?」
+	PRINTFORMW 「네에... %LOCALS:0% 마음대로 해주세요」
 ;연모면서 섹스(합의)한 사이
-ELSEIF TALENT:합의 && TALENT:연모
-	;PRINTFORMW
-;연모 (섹스안함)
 ELSEIF TALENT:연모
-	;PRINTFORMW
+	PRINTFORMW 「사, 사귀는 사이도 아닌데 엣치라니...」
+	PRINTFORMW 「싫지는 않지만요...」
 ;일반 만남
 ELSE
-	;PRINTFORMW 
+	PRINTFORMW 「엣치 하는건가요?」
+	PRINTFORMW 「읏, 알겠습니다아...」
 
 ENDIF
 RESETCOLOR
@@ -344,27 +378,38 @@ ELSEIF TCVAR:52
 ELSEIF BASE:기력 <= 300 || BASE:체력 <= 300
 	PRINTFORMW 「흣... 죄송해요. 너무 피곤해요....」
 	PRINTFORMW 아이리는 꾸벅꾸벅 졸더니 그대로 잠들어버렸다.
-;연인이면서 섹스(합의)한 상태
-ELSEIF TALENT:연인 && TALENT:합의
-	;PRINTFORMW 
-;연인이면서 섹스(합의) 안 한 사이
-ELSEIF TALENT:연인
-	;PRINTFORMW
-;복종이면서 섹스(합의)한 사이
-ELSEIF TALENT:복종 && TALENT:합의
-	;PRINTFORMW 
-;복종이면서 섹스(합의) 안 한 사이
+;연인
+ELSEIF TALENT:연인 && TALENT:연모
+	PRINTFORMW 「우으... %LOCALS:0%, 좀 더 엣치 해요오...」
+	PRINTFORMW 아이리가 %조사처리(ANAME(MASTER),"을")% 껴안고 졸라대지만 어쩔 수 없다.
+	;비처녀, V감 2이상, 욕망 3 이상
+	IF TALENT:처녀 == 0 && ABL:욕망 >= 3 && ABL:Ｖ감 >= 2
+		SELECTCASE RAND:3
+			CASE 0
+				PRINTFORMW 「다음에도 제 안쪽 푹푹 해주셔야 해요?」
+			CASE 1
+				PRINTFORMW 「우으... 또 안아주셔야 해요?」
+			CASE 2
+				PRINTFORMW 「또 제 보지에 자지 푹푹 해주세요!」
+		ENDSELECT
+	;그 외
+	ELSE
+		PRINTFORMW 「다음에도 저랑 엣치해주세요!」
+	ENDIF 
+;복종
 ELSEIF TALENT:복종
-	;PRINTFORMW 
-;연모면서 섹스(합의)한 사이
-ELSEIF TALENT:합의 && TALENT:연모
-	;PRINTFORMW
-;연모 (섹스안함)
+	PRINTFORMW 「%LOCALS:0%, 오늘 기분 좋으셨나요?」
+	PRINTFORMW 「우읏, 다, 다행이에요...」
+	PRINTFORMW 「다음에도 야한거 하고 싶으시면 불러주세요」
+;연모
 ELSEIF TALENT:연모
-	;PRINTFORMW
-;일반 만남
+	PRINTFORMW 「으읏, 벌써 시간이...」
+	PRINTFORML 「좀 더 같이 있고 싶은데... 안되나요?」
+	PRINTFORMW 「또 불러주세요? 헤헤」
+;일반
 ELSE
-	;PRINTFORMW 
+	PRINTFORMW 「흐읏, 끄,끝인가요?」
+	PRINTFORMW 「조심히 가세요. %LOCALS:0%」
 
 ENDIF
 RESETCOLOR
@@ -425,28 +470,60 @@ ENDIF
 ;-------------------------------------------------
 IF SELECTCOM == 20
 	;퍼스트 키스
-	IF TALENT:키스미경험
+	IF CFLAG:232 == 1
+		CFLAG:232 = 0
 		;연모
 		IF TALENT:연모
-			;PRINTFORMW 
+			PRINTFORMW 「앗, 키, 키스요...?」
+			PRINTFORML 아이리의 입술에 %조사처리(ANAME(MASTER),"가")% 입을 맞추자 당황스러워하지만 아이리도 팔을 감싸며 적극적으로 혀를 얽혀왔다. 
+			PRINTFORMW 「후으... 하아... 키스라는건 엄청 달콤하네요...♡」
+			PRINTFORMW 아이리는 아쉬운듯 %ANAME(MASTER)%의 얼굴을 잡고 다시 한 번 입맞춤을 한다.
 		;복종
 		ELSEIF TALENT:복종
-			;PRINTFORMW
+			PRINTFORMW 「우읏, %LOCALS:0%...?」
+			PRINTFORMW 아이리의 어깨를 잡고 거칠게 입맞춤을 하자 놀란 표정으로 %ANAME(MASTER)%의 입맞춤을 받아들이고 있다.
+			PRINTFORML 「후으.. 흐으... 어째서... 제 퍼스트키스...」
+			PRINTFORMW 입을 떼자 새빨게진 얼굴로 거친 숨을 내쉬고 있다.
 		;그 이외
 		ELSE
-			;PRINTFORMW 
+			PRINTFORMW 「%LOCALS:0%? 어째서 얼굴을 가까히.... 우읍!」
+			PRINTFORML 아이리는 %ANAME(MASTER)%의 갑작스러운 입맞춤에 당황하지만 그렇게 싫진 않았는지 %ANAME(MASTER)%의 혀를 받아들이고 있다.
+			PRINTFORMW 「우... 뭐, 뭔가요 갑자기!」
+			PRINTFORMW 「그.... 갑작스러워서 놀랐다고 할까... 싫...지는 않았지만요」
 		ENDIF
 	;키스경험이 있음
 	ELSE
 		;연모
 		IF TALENT:연모
-			;PRINTFORMW 
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORMW 「쪽.. 츄우.. 혀 움직임이 야해요...♡ 쬬옥」
+				CASE 1
+					PRINTFORMW 「츄우... 쪽.. 에헤헤... 초콜렛처럼 달콤해요」
+				CASE 2
+					PRINTFORMW 「쬬옥 쬭.. 좋아요...♡ 좀 더 키스해줘요♡」
+			ENDSELECT
 		;복종
 		ELSEIF TALENT:복종
-			;PRINTFORMW
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORMW 「쪽.. 츄우.. 제 혀 기분 좋으신가요?」
+				CASE 1
+					PRINTFORMW 「츄우... 쪽.. 우읍.... 격려해요...」
+				CASE 2
+					PRINTFORMW 「쬬옥 쬭.. 쬬옥...」
+					PRINTFORMW 「하아, 하아, 키스해주셔서 감사합니다...」
+			ENDSELECT
 		;그 이외
 		ELSE
-			;PRINTFORMW 
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORMW 「쪽.. 츄우.. 쬭, 후우... 머리가 어지러워요...」
+				CASE 1
+					PRINTFORMW 「츄우... 쪽.. 쬬옥...」
+				CASE 2
+					PRINTFORMW 「쬬옥 쬭.. 뭔가 중독될 것 같아요」
+			ENDSELECT
 		ENDIF
 	ENDIF
 RETURN 0
@@ -456,94 +533,46 @@ ENDIF
 ;조개 맞대기
 ;-------------------------------------------------
 IF SELECTCOM == 21
-	;이 캐릭터가 주도권을 가지고 있다
-	IF IS_INITIATIVE(TARGET)
-		;처음
-		IF IS_COM_FIRST()
-			;연모
-			IF TALENT:연모
-				;PRINTFORMW 
-			;복종
-			ELSEIF TALENT:복종
-				;PRINTFORMW
-			;그 이외
-			ELSE
-				;PRINTFORMW 
-			ENDIF
-		;2회째 이후
+	;처음
+	IF IS_COM_FIRST()
+		;연모
+		IF TALENT:연모
+			;PRINTFORMW 
+		;복종
+		ELSEIF TALENT:복종
+			;PRINTFORMW
+		;그 이외
 		ELSE
-			;연모
-			IF TALENT:연모
-				;Ｃ감 Lv3 이상
-				IF ABL:Ｃ감 >= 3
-					;PRINTFORMW 
-				;Ｃ감 Lv3 미만
-				ELSE
-					;PRINTFORMW 
-				ENDIF
-			;복종
-			ELSEIF TALENT:복종
-				;Ｃ감 Lv3 이상
-				IF ABL:Ｃ감 >= 3
-					;PRINTFORMW 
-				;Ｃ감 Lv3 미만
-				ELSE
-					;PRINTFORMW 
-				ENDIF
-			;그 이외
-			ELSE
-				;Ｃ감 Lv3 이상
-				IF ABL:Ｃ감 >= 3
-					;PRINTFORMW 
-				;Ｃ감 Lv3 미만
-				ELSE
-					;PRINTFORMW 
-				ENDIF
-			ENDIF
+			;PRINTFORMW 
 		ENDIF
-	;이 캐릭터가 주도권을 가지고 있지 않다
+	;2회째 이후
 	ELSE
-		;처음
-		IF IS_COM_FIRST()
-			;연모
-			IF TALENT:연모
+		;연모
+		IF TALENT:연모
+			;Ｃ감 Lv3 이상
+			IF ABL:Ｃ감 >= 3
 				;PRINTFORMW 
-			;복종
-			ELSEIF TALENT:복종
-				;PRINTFORMW
-			;그 이외
+			;Ｃ감 Lv3 미만
 			ELSE
 				;PRINTFORMW 
 			ENDIF
-		;2회째 이후
-		ELSE
-			;연모
-			IF TALENT:연모
-				;Ｃ감 Lv3 이상
-				IF ABL:Ｃ감 >= 3
-					;PRINTFORMW 
-				;Ｃ감 Lv3 미만
-				ELSE
-					;PRINTFORMW 
-				ENDIF
-			;복종
-			ELSEIF TALENT:복종
-				;Ｃ감 Lv3 이상
-				IF ABL:Ｃ감 >= 3
-					;PRINTFORMW 
-				;Ｃ감 Lv3 미만
-				ELSE
-					;PRINTFORMW 
-				ENDIF
-			;그 이외
+		;복종
+		ELSEIF TALENT:복종
+			;Ｃ감 Lv3 이상
+			IF ABL:Ｃ감 >= 3
+				;PRINTFORMW 
+			;Ｃ감 Lv3 미만
 			ELSE
-				;Ｃ감 Lv3 이상
-				IF ABL:Ｃ감 >= 3
-					;PRINTFORMW 
-				;Ｃ감 Lv3 미만
-				ELSE
-					;PRINTFORMW 
-				ENDIF
+				;PRINTFORMW 
+			ENDIF
+		;그 이외
+		ELSE
+			;Ｃ감 Lv3 이상
+			IF ABL:Ｃ감 >= 3
+				;PRINTFORMW 
+			;Ｃ감 Lv3 미만
+			ELSE
+				;PRINTFORMW 
 			ENDIF
 		ENDIF
 	ENDIF
@@ -554,130 +583,64 @@ ENDIF
 ;쌍두 바이브
 ;-------------------------------------------------
 IF SELECTCOM == 22
-	;이 캐릭터가 주도권을 가지고 있다
-	IF IS_INITIATIVE(TARGET)
-		;처음
-		IF IS_COM_FIRST()
-			;이 캐릭터와 주인공이 함께 처녀
-			IF TALENT:처녀 && TALENT:MASTER:처녀
-				;연모 or 복종
-				IF TALENT:연모 || TALENT:복종
-					;PRINTFORMW 
-				;그 이외
-				ELSE
-					;PRINTFORMW 
-				ENDIF
-			;이 캐릭터만 처녀
-			ELSEIF TALENT:처녀
-				;연모 or 복종
-				IF TALENT:연모 || TALENT:복종
-					;PRINTFORMW 
-				;그 이외
-				ELSE
-					;PRINTFORMW 
-				ENDIF
-			;주인공만 처녀
-			ELSEIF TALENT:MASTER:처녀
-				;연모 or 복종
-				IF TALENT:연모 || TALENT:복종
-					;PRINTFORMW 
-				;그 이외
-				ELSE
-					;PRINTFORMW 
-				ENDIF
-			;이 캐릭터와 주인공이 함께 비처녀
+	;처음
+	IF IS_COM_FIRST()
+		;이 캐릭터와 주인공이 함께 처녀
+		IF TALENT:처녀 && TALENT:MASTER:처녀
+			;연모 or 복종
+			IF TALENT:연모 || TALENT:복종
+				;PRINTFORMW 
+			;그 이외
 			ELSE
-				;연모 or 복종
-				IF TALENT:연모 || TALENT:복종
-					;PRINTFORMW 
-				;그 이외
-				ELSE
-					;PRINTFORMW 
-				ENDIF
+				;PRINTFORMW 
 			ENDIF
-		;2회째 이후
+		;이 캐릭터만 처녀
+		ELSEIF TALENT:처녀
+			;연모 or 복종
+			IF TALENT:연모 || TALENT:복종
+				;PRINTFORMW 
+			;그 이외
+			ELSE
+				;PRINTFORMW 
+			ENDIF
+		;주인공만 처녀
+		ELSEIF TALENT:MASTER:처녀
+			;연모 or 복종
+			IF TALENT:연모 || TALENT:복종
+				;PRINTFORMW 
+			;그 이외
+			ELSE
+				;PRINTFORMW 
+			ENDIF
+		;이 캐릭터와 주인공이 함께 비처녀
 		ELSE
 			;연모 or 복종
 			IF TALENT:연모 || TALENT:복종
-				;Ｖ감 Lv3 이상
-				IF ABL:Ｖ감 >= 3
-					;PRINTFORMW 
-				;Ｖ감 Lv3 미만
-				ELSE
-					;PRINTFORMW 
-				ENDIF
+				;PRINTFORMW 
 			;그 이외
 			ELSE
-				;Ｖ감 Lv3 이상
-				IF ABL:Ｖ감 >= 3
-					;PRINTFORMW 
-				;Ｖ감 Lv3 미만
-				ELSE
-					;PRINTFORMW 
-				ENDIF
+				;PRINTFORMW 
 			ENDIF
 		ENDIF
-	;이 캐릭터가 주도권을 가지고 있지 않다
+	;2회째 이후
 	ELSE
-		;처음
-		IF IS_COM_FIRST()
-			;이 캐릭터와 주인공이 함께 처녀
-			IF TALENT:처녀 && TALENT:MASTER:처녀
-				;연모 or 복종
-				IF TALENT:연모 || TALENT:복종
-					;PRINTFORMW 
-				;그 이외
-				ELSE
-					;PRINTFORMW 
-				ENDIF
-			;이 캐릭터만 처녀
-			ELSEIF TALENT:처녀
-				;연모 or 복종
-				IF TALENT:연모 || TALENT:복종
-					;PRINTFORMW 
-				;그 이외
-				ELSE
-					;PRINTFORMW 
-				ENDIF
-			;주인공만 처녀
-			ELSEIF TALENT:MASTER:처녀
-				;연모 or 복종
-				IF TALENT:연모 || TALENT:복종
-					;PRINTFORMW 
-				;그 이외
-				ELSE
-					;PRINTFORMW 
-				ENDIF
-			;이 캐릭터와 주인공이 함께 비처녀
+		;연모 or 복종
+		IF TALENT:연모 || TALENT:복종
+			;Ｖ감 Lv3 이상
+			IF ABL:Ｖ감 >= 3
+				;PRINTFORMW 
+			;Ｖ감 Lv3 미만
 			ELSE
-				;연모 or 복종
-				IF TALENT:연모 || TALENT:복종
-					;PRINTFORMW 
-				;그 이외
-				ELSE
-					;PRINTFORMW 
-				ENDIF
+				;PRINTFORMW 
 			ENDIF
-		;2회째 이후
+		;그 이외
 		ELSE
-			;연모 or 복종
-			IF TALENT:연모 || TALENT:복종
-				;Ｖ감 Lv3 이상
-				IF ABL:Ｖ감 >= 3
-					;PRINTFORMW 
-				;Ｖ감 Lv3 미만
-				ELSE
-					;PRINTFORMW 
-				ENDIF
-			;그 이외
+			;Ｖ감 Lv3 이상
+			IF ABL:Ｖ감 >= 3
+				;PRINTFORMW 
+			;Ｖ감 Lv3 미만
 			ELSE
-				;Ｖ감 Lv3 이상
-				IF ABL:Ｖ감 >= 3
-					;PRINTFORMW 
-				;Ｖ감 Lv3 미만
-				ELSE
-					;PRINTFORMW 
-				ENDIF
+				;PRINTFORMW 
 			ENDIF
 		ENDIF
 	ENDIF
@@ -795,30 +758,38 @@ IF SELECTCOM == 1
 	IF IS_COM_FIRST()
 		;연모
 		IF TALENT:연모
-			;Ｂ감 Lv3 이상
-			IF ABL:Ｂ감 >= 3
-				PRINTFORMW 
-			;Ｂ감 Lv3 미만
-			ELSE
-				PRINTFORMW 
-			ENDIF
+			PRINTFORML 「제 가슴을 만지고 싶다구요?」
+			PRINTFORML 아이리는 한참 고민하더니 %ANAME(MASTER)% 앞에 서서 귀에 대고 '변태'라고 말한 뒤, 웃옷을 벗고 가슴을 내민다. 
+			PRINTFORMW 「에헤헤... 제 가슴이 그렇게 좋으신가요?」
 		;복종
 		ELSEIF TALENT:복종
 			;Ｂ감 Lv3 이상
 			IF ABL:Ｂ감 >= 3
-				PRINTFORMW 
+				PRINTFORML 아이리에게 가슴을 만지고 싶다고 하자 %ANAME(MASTER)%에게 가슴을 내민다.
+				PRINTFORMW 「읏, %ANAME(MASTER)%, 마음껏 만지셔도 좋... 히읏♡」
+				PRINTFORML 손이 가슴에 닿자마자 달콤한 소리를 내며 %ANAME(MASTER)%의 손길을 즐기고 있다.
 			;Ｂ감 Lv3 미만
 			ELSE
-				PRINTFORMW 
+				PRINTFORMW 「제 가슴을 만지고 싶으시다구요?」
+				PRINTFORML 아이리는 볼이 빨개진 상태로 %ANAME(MASTER)% 앞에 다가와 %ANAME(MASTER)%의 손을 잡고 자신의 가슴 위에 가져간다.
+				PRINTFORMW 「우, %LOCALS:0% 마음껏 만져주세요.」
 			ENDIF
 		;그 이외
 		ELSE
 			;Ｂ감 Lv3 이상
 			IF ABL:Ｂ감 >= 3
-				;PRINTFORMW 
+				PRINTFORMW 「햐으응?!!」
+				PRINTFORML %ANAME(MASTER)%의 손이 가슴에 닿자 아이리는 괴상한 소리를 내며 놀란 표정을 지었다.
+				PRINTFORMW 「그, 갑자기 손을 대셔서 놀라서....」
+				PRINTFORML 아이리는 부끄러웠는지 횡설수설 해명하기 시작했고 %조사처리(ANAME(MASTER),"은")% 듣지도 않고 다시 가슴에 손을 댄다.
+				PRINTFORMW 「흐으읏...♡ 자, 잠깐만요. 아직 마음의 준비가 안됐어요.」
 			;Ｂ감 Lv3 미만
 			ELSE
-				;PRINTFORMW 
+				PRINTFORMW 「!!!!」
+				PRINTFORML %조사처리(ANAME(MASTER),"가")% 아이리의 가슴을 만지자 놀란 듯 쳐다본다.
+				PRINTFORMW 「우... 만지고 싶으신가요...? 가슴은 자신 없는데요..」
+				PRINTFORML 만지고 싶다고 말하자 %ANAME(MASTER)% 앞에 다가와 작은 가슴을 내민다.
+				PRINTFORMW 「대신 안 아프게 만져주세요...?」
 			ENDIF
 		ENDIF
 	;2회째 이후
@@ -827,28 +798,28 @@ IF SELECTCOM == 1
 		IF TALENT:연모
 			;Ｂ감 Lv3 이상
 			IF ABL:Ｂ감 >= 3
-				;PRINTFORMW 
+				PRINTFORMW 「가슴 기분 좋아요♡」
 			;Ｂ감 Lv3 미만
 			ELSE
-				;PRINTFORMW 
+				PRINTFORMW 「에헤헤... 제 가슴이 그렇게 좋으신가요?」
 			ENDIF
 		;복종
 		ELSEIF TALENT:복종
 			;Ｂ감 Lv3 이상
 			IF ABL:Ｂ감 >= 3
-				;PRINTFORMW 
+				PRINTFORMW 「읏, %ANAME(MASTER)%, 마음껏 만지셔도 좋... 히읏♡」
 			;Ｂ감 Lv3 미만
 			ELSE
-				;PRINTFORMW 
+				PRINTFORMW 「제 가슴 기분 좋으신가요...?」
 			ENDIF
 		;그 이외
 		ELSE
 			;Ｂ감 Lv3 이상
 			IF ABL:Ｂ감 >= 3
-				;PRINTFORMW 
+				PRINTFORMW 「햐으... 손 끝이 닿을 때 마다 찌릿해요...」
 			;Ｂ감 Lv3 미만
 			ELSE
-				;PRINTFORMW 
+				PRINTFORMW 「읏, 간지러워요」
 			ENDIF
 		ENDIF
 	ENDIF
@@ -878,11 +849,11 @@ IF SELECTCOM == 2
 		ELSEIF TALENT:복종
 			;Ｃ감 Lv3 이상
 			IF ABL:Ｃ감 >= 3
-				PRINTFORMW 「햣, %LOCALS:0%. 기분 좋아요...」
+				PRINTFORMW 「햣, %LOCALS:0%. 보지 기분 좋아요...」
 			;Ｃ감 Lv3 미만
 			ELSE
-				PRINTFORMW 「으읏... %LOCALS:0%, 제 거기 더러운데...」
-				PRINTFORMW 아이리는 %조사처리(ANAME(MASTER),"가")% 자신의 보지를 핥는 것을 불안하게 쳐다본다.
+				PRINTFORMW 「으읏... %LOCALS:0%, 거기 더러운 곳인데...」
+				PRINTFORMW 아이리는 %조사처리(ANAME(MASTER),"가")% 자신의 음부를 핥는 것을 불안하게 쳐다본다.
 			ENDIF
 		;그 이외
 		ELSE
@@ -890,10 +861,12 @@ IF SELECTCOM == 2
 			IF ABL:Ｃ감 >= 3
 				PRINTFORMW 「햐앗..?!」
 				PRINTFORML %ANAME(MASTER)%의 혀가 아이리의 보지에 닿자 놀란 듯한 표정을 짓고 있다.
-				PRINTFORMW 「흐읏...♡ %조사처리(LOCALS:0,"가")%의 혀, 기분 좋아...♡」
+				PRINTFORMW 「흐읏...♡ %LOCALS:0%의 혀, 기분 좋아...♡」
 			;Ｃ감 Lv3 미만
 			ELSE
-				PRINTFORMW 「」
+				PRINTFORMW 「읏... 안돼요. 거긴 더러워요...」
+				PRINTFORML 아이리는 %조사처리(ANAME(MASTER),"가")% 음부를 혀로 핥자 놀란 듯 그만두라고 부탁한다.
+				PRINTFORMW 「으읏... 간지럽기만 해요... 그만해주세요.」
 			ENDIF
 		ENDIF
 	;2회째 이후
@@ -902,28 +875,30 @@ IF SELECTCOM == 2
 		IF TALENT:연모
 			;Ｃ감 Lv3 이상
 			IF ABL:Ｃ감 >= 3
-				;PRINTFORMW 
+				PRINTFORML 「힛... %LOCALS:0%, 좀 더 핥아주세요♡」
+				PRINTFORMW 아이리는 %ANAME(MASTER)%의 혀놀림에 기쁘게 받아들이고 있다.
 			;Ｃ감 Lv3 미만
 			ELSE
-				;PRINTFORMW 
+				PRINTFORML 「으읏... 간지러워요...♡ 제 보지가 그렇게 맛있나요?」
+				PRINTFORMW 아이리는 %조사처리(ANAME(MASTER),"을")% 사랑스러운 눈빛으로 쳐다보고 있다.
 			ENDIF
 		;복종
 		ELSEIF TALENT:복종
 			;Ｃ감 Lv3 이상
 			IF ABL:Ｃ감 >= 3
-				;PRINTFORMW 
+				PRINTFORMW 「아앗... 좋아요... %ANAME(MASTER)%의 혀, 기분 좋아요...♡」 
 			;Ｃ감 Lv3 미만
 			ELSE
-				;PRINTFORMW 
+				PRINTFORMW 「으읏.. 간지러워요...」
 			ENDIF
 		;그 이외
 		ELSE
 			;Ｃ감 Lv3 이상
 			IF ABL:Ｃ감 >= 3
-				;PRINTFORMW 
+				PRINTFORMW 「흣... 거기 핥으면... 느껴버려♡」
 			;Ｃ감 Lv3 미만
 			ELSE
-				;PRINTFORMW 
+				PRINTFORMW 「힛, 핥지 말아주세요....!」
 			ENDIF
 		ENDIF
 	ENDIF
@@ -940,25 +915,33 @@ IF SELECTCOM == 3
 		IF TALENT:처녀
 			;연모
 			IF TALENT:연모
-				;PRINTFORMW 
+				PRINTFORML 「%LOCALS:0%의 손가락이 제 안에...」
+				PRINTFORML 「으읏, 안 쪽 닿아서 이상해요...」
+				PRINTFORMW 「그, 그래도 좋아요...♡」
 			;복종
 			ELSEIF TALENT:복종
-				;PRINTFORMW 
+				PRINTFORML 「%LOCALS:0%의 손가락이 제 안에...」
+				PRINTFORML 「으읏, 안 쪽 닿아서 이상해요...」
 			;그 이외
 			ELSE
-				;PRINTFORMW 
+				PRINTFORMW 「우읏... 손가락 끝 부분이 들어와...」
+				PRINTFORML 아이리의 음부에 손가락을 하나 밀어넣자 경험이 없는 질내가 손가락을 꼬옥 조여온다.
+				PRINTFORMW 손 끝에 느껴지는 처녀막의 느낌을 즐기면서 손가락을 움직인다.
+				PRINTFORMW 「흣, 흐으... 이상해요...」
 			ENDIF
 		;비처녀
 		ELSE
 			;연모
 			IF TALENT:연모
-				;PRINTFORMW 
+				PRINTFORML 「읏, 손가락이... 안쪽에 닿아서♡」
+				PRINTFORMW 아이리의 음부에 손가락을 집어넣자 달콤한 소리를 내며 몸을 비틀고 있다.
 			;복종
 			ELSEIF TALENT:복종
-				;PRINTFORMW 
+				PRINTFORML 「우읏... %LOCALS:0%, 바로 자지 박으셔도 괜찮은데...」
+				PRINTFORMW 아이리의 음부에 손가락을 밀어넣자 당황하면서도 눈을 감고 %ANAME(MASTER)%의 손가락을 느끼고 있다.
 			;그 이외
 			ELSE
-				;PRINTFORMW 
+				PRINTFORMW 
 			ENDIF
 		ENDIF
 	;2회째 이후
@@ -967,28 +950,31 @@ IF SELECTCOM == 3
 		IF TALENT:연모
 			;Ｖ감 Lv3 이상
 			IF ABL:Ｖ감 >= 3
-				;PRINTFORMW 
+				PRINTFORMW 「%LOCALS:0%의 손가락, 기분좋은 곳에 닿아서... 힉!」
+				PRINTFORMW 「좋아요....♡」
 			;Ｖ감 Lv3 미만
 			ELSE
-				;PRINTFORMW 
+				PRINTFORMW 「우읏, 손가락이 안쪽에... 읏..」
 			ENDIF
 		;복종
 		ELSEIF TALENT:복종
 			;Ｖ감 Lv3 이상
 			IF ABL:Ｖ감 >= 3
-				;PRINTFORMW 
+				PRINTFORMW 「손가락, 기분좋은 곳에 닿아서... 힉!」
+				PRINTFORMW 「좋아요....♡」
 			;Ｖ감 Lv3 미만
 			ELSE
-				;PRINTFORMW 
+				PRINTFORMW 「우읏, 손가락이 안쪽에... 읏..」
 			ENDIF
 		;그 이외
 		ELSE
 			;Ｖ감 Lv3 이상
 			IF ABL:Ｖ감 >= 3
-				;PRINTFORMW 
+				PRINTFORMW 「손가락, 기분좋은 곳에 닿아서... 힉!」
+				PRINTFORMW 「좋아요....♡」
 			;Ｖ감 Lv3 미만
 			ELSE
-				;PRINTFORMW 
+				PRINTFORMW 「우읏, 손가락이 안쪽에... 읏..」
 			ENDIF
 		ENDIF
 	ENDIF
@@ -1000,69 +986,36 @@ ENDIF
 ;-------------------------------------------------
 IF SELECTCOM == 4
 	;이 캐릭터가 주도권을 가지고 있다
-	IF IS_INITIATIVE(TARGET)
-		;처음
-		IF IS_COM_FIRST()
-			;연모 or 복종
-			IF TALENT:연모 || TALENT:복종
-				;PRINTFORMW 
-			;그 이외
-			ELSE
-				;PRINTFORMW 
-			ENDIF
-		;2회째 이후
+	;처음
+	IF IS_COM_FIRST()
+		;연모 or 복종
+		IF TALENT:연모
+			;PRINTFORMW 
+		ELSEIF TALENT:복종
+			;PRINTFORMW 
+		;그 이외
 		ELSE
-			;연모 or 복종
-			IF TALENT:연모 || TALENT:복종
-				;Ａ감 Lv3 이상
-				IF ABL:Ａ감 >= 3
-					;PRINTFORMW 
-				;Ａ감 Lv3 미만
-				ELSE
-					;PRINTFORMW 
-				ENDIF
-			;그 이외
-			ELSE
-				;Ａ감 Lv3 이상
-				IF ABL:Ａ감 >= 3
-					;PRINTFORMW 
-				;Ａ감 Lv3 미만
-				ELSE
-					;PRINTFORMW 
-				ENDIF
-			ENDIF
+			;PRINTFORMW 
 		ENDIF
-	;이 캐릭터가 주도권을 가지고 있지 않다
+	;2회째 이후
 	ELSE
-		;처음
-		IF IS_COM_FIRST()
-			;연모 or 복종
-			IF TALENT:연모 || TALENT:복종
+		;연모 or 복종
+		IF TALENT:연모 || TALENT:복종
+			;Ａ감 Lv3 이상
+			IF ABL:Ａ감 >= 3
 				;PRINTFORMW 
-			;그 이외
+			;Ａ감 Lv3 미만
 			ELSE
 				;PRINTFORMW 
 			ENDIF
-		;2회째 이후
+		;그 이외
 		ELSE
-			;연모 or 복종
-			IF TALENT:연모 || TALENT:복종
-				;Ａ감 Lv3 이상
-				IF ABL:Ａ감 >= 3
-					;PRINTFORMW 
-				;Ａ감 Lv3 미만
-				ELSE
-					;PRINTFORMW 
-				ENDIF
-			;그 이외
+			;Ａ감 Lv3 이상
+			IF ABL:Ａ감 >= 3
+				;PRINTFORMW 
+			;Ａ감 Lv3 미만
 			ELSE
-				;Ａ감 Lv3 이상
-				IF ABL:Ａ감 >= 3
-					;PRINTFORMW 
-				;Ａ감 Lv3 미만
-				ELSE
-					;PRINTFORMW 
-				ENDIF
+				;PRINTFORMW 
 			ENDIF
 		ENDIF
 	ENDIF
@@ -1070,50 +1023,30 @@ IF SELECTCOM == 4
 ENDIF
 
 ;-------------------------------------------------
-;거품 춤(타겟)
+;로션(타겟)
 ;-------------------------------------------------
 IF SELECTCOM == 5
-	;이 캐릭터가 주도권을 가지고 있다
-	IF IS_INITIATIVE(TARGET)
-		;처음
-		IF IS_COM_FIRST()
-			;연모 or 복종
-			IF TALENT:연모 || TALENT:복종
-				;PRINTFORMW 
-			;그 이외
-			ELSE
-				;PRINTFORMW 
-			ENDIF
-		;2회째 이후
+	;처음
+	IF IS_COM_FIRST()
+		;연모 or 복종
+		IF TALENT:연모
+			;PRINTFORMW
+		ELSEIF TALENT:복종
+			;PRINTFORMW 
+		;그 이외
 		ELSE
-			;연모 or 복종
-			IF TALENT:연모 || TALENT:복종
-				;PRINTFORMW 
-			;그 이외
-			ELSE
-				;PRINTFORMW 
-			ENDIF
+			;PRINTFORMW 
 		ENDIF
-	;이 캐릭터가 주도권을 가지고 있지 않다
+	;2회째 이후
 	ELSE
-		;처음
-		IF IS_COM_FIRST()
-			;연모 or 복종
-			IF TALENT:연모 || TALENT:복종
-				;PRINTFORMW 
-			;그 이외
-			ELSE
-				;PRINTFORMW 
-			ENDIF
-		;2회째 이후
+		;연모 or 복종
+		IF TALENT:연모
+			;PRINTFORMW
+		ELSEIF TALENT:복종
+			;PRINTFORMW 
+		;그 이외
 		ELSE
-			;연모 or 복종
-			IF TALENT:연모 || TALENT:복종
-				;PRINTFORMW 
-			;그 이외
-			ELSE
-				;PRINTFORMW 
-			ENDIF
+			;PRINTFORMW 
 		ENDIF
 	ENDIF
 	RETURN 0
@@ -1695,38 +1628,40 @@ ENDIF
 ;정상위(타겟)
 ;-------------------------------------------------
 IF SELECTCOM == 30
-
 	;처녀
 	IF CFLAG:230 == 1
+
+		;구상 플래그 비처녀 처리
+		CFLAG:230 = 0
+
 		;연모 첫 섹스
 		IF TALENT:연모
 			;대상이 주도권 가짐
-			IF IS_INITIATIVE(TARGET)
-
-			;실행자가 주도권 가짐
-			ELSE
-
-			ENDIF
+			PRINTFORMW 아이리를 눕히고 음부에 %ANAME(MASTER)%의 물건을 비비자 아이리는 살짝 긴장한 듯 %조사처리(ANAME(MASTER),"를")% 바라보고 있다.
+			PRINTFORMW 「에헤헤... 역시 처음은 무섭네요. 넣어주세요 %LOCALS:0%.」
+			PRINTFORMW 아이리의 음부를 충분히 비벼준 뒤 끝부분을 밀어넣자 눈을 감으며 %조사처리(ANAME(MASTER),"를")% 붙잡는다.
+			PRINTFORMW 「아으, 괘, 괜찮아요... 끝까지 넣어주세요.」
+			PRINTFORMW 허리에 힘을 줘 끝까지 밀어넣자 아이리는 웃음을 지으며 %조사처리(ANAME(MASTER),"를")% 바라본다.
+			PRINTFORMW 「헤헤♡ 드디어 이어졌어요」
+			PRINTFORMW 「제 안은 어떠신가요? 기분 좋으신가요?」
+			PRINTFORMW 「저는 이제 안아프니 %LOCALS:0% 마음대로 움직여주세요.」
 		;복종 첫 섹스
 		ELSEIF TALENT:복종
-			;대상이 주도권 가짐
-			IF IS_INITIATIVE(TARGET)
+			PRINTFORMW 아이리를 눕히고 음부에 %ANAME(MASTER)%의 자지를 대자 긴장한 표정으로 자신의 음부를 벌린다.
+			PRINTFORMW 「네에, 저는 %LOCALS:0%의 노예니까... 원하시는대로 해주세요.」
+			PRINTFORMW 아이리는 두려운 듯 손을 떨며 %ANAME(MASTER)%의 물건이 자신의 안에 들어오는 것을 바라보고 있다.
+			PRINTFORMW 「으긋, 힛, 으우....」
+			PRINTFORMW 처녀막이 찢어지는 감촉이 아팠던 것 인지 눈물을 흘리며 신음한다. 
+			PRINTFORMW 「히끅, 제 보, 보지에 자지 넣어주셔서 감사합니다...」
 
-			;실행자가 주도권 가짐
-			ELSE
-
-			ENDIF
-		;해당 캐릭터가 지배
-		ELSEIF TALENT:주인	
-			;대상이 주도권 가짐
-			IF IS_INITIATIVE(TARGET)
-
-			;실행자가 주도권 가짐
-			ELSE
-
-			ENDIF
-		;(선택)호감도가 -500에서 첫 섹스
-		;ELSEIF CFLAG:호감도 <= -500
+		;호감도가 -500에서 첫 섹스
+		ELSEIF CFLAG:호감도 <= -500
+			PRINTFORMW 「싫어... 그만해주세요...」
+			PRINTFORMW 「읏, 안돼... 끝 부분 밀어넣지 말아주세요!」
+			PRINTFORML 아이리의 부탁을 무시한 채 %LOCALS:0%의 물건을 아이리의 질내에 밀어넣자 끝부분에서 이물감이 느껴진다.
+			PRINTFORML 처녀막의 감촉을 충분히 느낀 뒤 허리에 힘을 주어 아이리의 처녀의 증거를 산산히 부숴버렸다.
+			PRINTFORMW 「흑, 아파아... 어째서 이런 일을...」
+			PRINTFORMW 눈물 흘리며 %조사처리(ANAME(MASTER),"를")% 원망하는 아이리를 무시한 채 허리를 흔들며 방금까지 처녀였던 질내를 즐긴다.
 
 		;그 외 첫 섹스
 		ELSE
@@ -1746,104 +1681,85 @@ IF SELECTCOM == 30
 	ELSE
 		;연모
 		IF TALENT:연모
-			;대상이 주도권
-			IF IS_INITIATIVE(TARGET)
-				;V감도 3 이상
-				IF ABL:Ｖ감 >= 3
-				
-				;V감도 2 이하
-				ELSE
-				
-				ENDIF
-			;실행자가 주도권
+			;V감도 3 이상
+			IF ABL:Ｖ감 >= 3
+			
+			;V감도 2 이하
 			ELSE
-				;V감도 3 이상
-				IF ABL:Ｖ감 >= 3
-				
-				;V감도 2 이하
-				ELSE
-				
-				ENDIF
+			
 			ENDIF
 		;복종
 		ELSEIF TALENT:복종
-			;대상이 주도권
-			IF IS_INITIATIVE(TARGET)
-				;V감도 3 이상
-				IF ABL:Ｖ감 >= 3
-				
-				;V감도 2 이하
-				ELSE
-				
-				ENDIF
-			;실행자가 주도권
+			;V감도 3 이상
+			IF ABL:Ｖ감 >= 3
+				SELECTCASE RAND:4
+					CASE 0
+						PRINTFORMW 「힛, 햐앗♡ 기분 좋은 곳 닿아서...♡」
+						PRINTFORMW 「%LOCALS:0%, 너무 좋아요♡」
+					CASE 1
+						PRINTFORMW 「힛, 햣... 제 보지 기분 좋은가요?」
+						PRINTFORMW 「다행이에요♡ 제 보지라도 쓸모가 있어서.... 히읏」
+					CASE 2
+						PRINTFORMW 「조아요오... %LOCALS:0%의 자지 너무 좋아요♡」
+					CASE 3
+						PRINTFORMW 「하아... 핫, 제 안쪽 기분 좋아요?♡」
+				ENDSELECT
+			;V감도 2 이하
 			ELSE
-				;V감도 3 이상
-				IF ABL:Ｖ감 >= 3
-				
-				;V감도 2 이하
-				ELSE
-				
-				ENDIF
-			ENDIF
-		;대상이 주인인 정상위
-		ELSEIF TALENT:주인
-			;대상이 주도권
-			IF IS_INITIATIVE(TARGET)
-				;V감도 3 이상
-				IF ABL:Ｖ감 >= 3
-				
-				;V감도 2 이하
-				ELSE
-				
-				ENDIF
-			;실행자가 주도권
-			ELSE
-				;V감도 3 이상
-				IF ABL:Ｖ감 >= 3
-				
-				;V감도 2 이하
-				ELSE
-				
-				ENDIF
+				SELECTCASE RAND:4
+					CASE 0
+						PRINTFORMW 「히윽, 커다란게 안쪽에서 들어와서...」
+						PRINTFORMW 아이리는 %ANAME(MASTER)%의 물건의 감촉을 느끼고 있다.
+					CASE 1
+						PRINTFORML 「제 보지에 박고 싶으신가요?」
+						PRINTFORML 「네에... 자아 넣어주세요 %LOCALS:0%」
+						PRINTFORML 아이리는 %ANAME(MASTER)%의 명령에 다리를 벌리고 손으로 음부를 벌린다.
+						PRINTFORMW 「읏, 흐읏... 하아...」
+					CASE 2
+						PRINTFORMW 「하앗.. 핫, 격렬해요오...」
+					CASE 3
+						PRINTFORML 「하아... 하앗... 너무 깊어요.」
+						PRINTFORMW 아이리는 아직 %ANAME(MASTER)%의 피스톤질에 느끼진 않는 것 같다. 
+				ENDSELECT
 			ENDIF
 		;(선택)호감도가 -500에서 첫 섹스
-		;ELSEIF CFLAG:호감도 <= -500
-
+		ELSEIF CFLAG:호감도 <= -500
+			;V감도 3 이상
+			IF ABL:Ｖ감 >= 3
+				PRINTFORMW 「힛, 흐잇... 싫어...」
+				PRINTFORMW 「싫지마안... 기분 좋아...♡ 힛!」
+			;V감도 2 이하
+			ELSE
+				PRINTFORMW 「으읏, 싫어, 기분나빠...」
+			ENDIF
 		;그 외
 		ELSE
-			;대상이 주도권
-			IF IS_INITIATIVE(TARGET)
-				;V감도 3 이상
-				IF ABL:Ｖ감 >= 3
-				
-				;V감도 2 이하
-				ELSE
-				
-				ENDIF
-			;실행자가 주도권
+			;V감도 3 이상
+			IF ABL:Ｖ감 >= 3
+				SELECTCASE RAND:3
+					CASE 0
+						PRINTFORMW 「힛, 좋아아... ♡ 안쪽 더 박아줘요」
+					CASE 1
+						PRINTFORMW 「흣 흐읏...! 약한 곳 찌르며언...♡」
+					CASE 2
+						PRINTFORMW 「하앗! %LOCALS:0%의 자지 기분 좋아요!」
+				ENDSELECT
+			;V감도 2 이하
 			ELSE
-				;V감도 3 이상
-				IF ABL:Ｖ감 >= 3
-				
-				;V감도 2 이하
-				ELSE
-					SELECTCASE RAND:4
-						CASE 0
-							PRINTFORMW 아이리는 아직 익숙하지 않은 듯 눈을 감고 %ANAME(MASTER)%의 물건을 느끼고 있다.
-						CASE 1
-							PRINTFORMW 약한 부분에 닿았는지 아이리는 움찔 하고 질내를 꽉 조였다
-							PRINTFORMW 「햐앗... 방금... 오싹해져서... 우으...」
-						CASE 2
-							PRINTFORMW 「제 안쪽 어떠신가요?」
-							PRINTFORMW 「흣.. 하... 저는 아직 잘 모르겠어요」
-						CASE 3
-							PRINTFORMW 「하아... 흣.. 하아...」
-						CASE 4
-							PRINTFORMW 아이리의 안을 오가며 질의 감촉을 느꼈다.
-							PRINTFORMW 「읏... 하아... 안쪽이 이상해요」
-					ENDSELECT
-				ENDIF
+				SELECTCASE RAND:4
+					CASE 0
+						PRINTFORMW 아이리는 아직 익숙하지 않은 듯 눈을 감고 %ANAME(MASTER)%의 물건을 느끼고 있다.
+					CASE 1
+						PRINTFORMW 약한 부분에 닿았는지 아이리는 움찔 하고 질내를 꽉 조였다
+						PRINTFORMW 「햐앗... 방금... 오싹해져서... 우으...」
+					CASE 2
+						PRINTFORMW 「흣, 하아.. 안쪽이 닿아서... 우우..」
+					CASE 3
+						PRINTFORMW 「하아... 흣.. 하아...」
+					CASE 4
+						PRINTFORMW 아이리의 안을 오가며 질의 감촉을 느꼈다.
+						PRINTFORMW 「읏... 하아... 안쪽이 이상해요」
+				ENDSELECT
 			ENDIF
 		ENDIF
 	ENDIF
@@ -12099,37 +12015,19 @@ ELSE
 	LOCALS:0 = %ANAME(MASTER)%
 ENDIF
 
-;-------------------------------------------------
-;처녀상실 (작동안됨)
-;-------------------------------------------------
-;주인공과의 섹스에 의한 처녀상실
-IF TCVAR:13 == 1
-	;연모 or 복종
-	IF TALENT:연모 || TALENT:복종
-		;PRINTFORMW 
-	;그 이외
-	ELSE
-		
-	ENDIF
-;주인공에게 섹스 이외로 처녀를 빼앗긴다
-ELSEIF TCVAR:13 == 2
-	;연모 or 복종
-	IF TALENT:연모 || TALENT:복종
-		;PRINTFORMW 
-	;그 이외
-	ELSE
-		;PRINTFORMW
-	ENDIF
-;그 이외때에 처녀상실
-ELSE
-	;연모 or 복종
-	IF TALENT:연모 || TALENT:복종
-		;PRINTFORMW 
-	;그 이외
-	ELSE
-		;PRINTFORMW
-	ENDIF
-ENDIF
+;경험 체크 (1 = 미경험)
+;만남 시작 시 처녀 여부 확인
+SIF !TALENT:처녀
+	CFLAG:230 = 0
+;만남 시작 시 애널처녀 여부 확인
+SIF !TALENT:애널처녀
+	CFLAG:231 = 0
+;만남 시작 시 키스미경험 여부 확인
+SIF !TALENT:키스미경험
+	CFLAG:232 = 0
+;만남 시작 시 동정 여부 확인
+SIF !TALENT:동정
+	CFLAG:232 = 0
 
 ;-------------------------------------------------
 ;주인공을 사정시켰다
